@@ -29,7 +29,7 @@
                       @click="likepost(post.id,index)"
                       :class="' '+iconcolor[index]"
                     >
-                      <i class="far fa-heart iconsize"></i>
+                      <i :class="checklike(index)"></i>
                     </a>
                     <a class="text-dark iconcover">
                       <i class="far fa-comment iconsize mx-2"></i>
@@ -65,19 +65,17 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="card" v-for="(post,index) in posts" :key="index" style="width: 100%;">
-              <img class="card-img-top" src="/images/download.jfif" alt="Card image cap" />
-              <div class="">
-                <p
-                  class=""
-                >Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              </div>
-            </div>-->
+
             <!-- Card End -->
           </div>
           <div class="col-md-4 sidebar">
-            <div class="d-flex">
-              <img :src="user.profile" class="rounded rounded-circle" width="20%" />
+            <div class="d-flex position-fixed">
+              <img
+                :src="user.profile"
+                class="rounded rounded-circle my-auto"
+                width="7%"
+                height="7%"
+              />
               <div class="ml-3 my-auto">
                 <router-link
                   :to="route()"
@@ -87,7 +85,7 @@
                 <div class="text-muted">{{user.name}}</div>
               </div>
             </div>
-            <div class="crd">
+            <div class="crd position-fixed">
               <div class="d-flex justify-content-between">
                 <h6
                   class="text-muted font-weight-bold my-auto"
@@ -98,13 +96,15 @@
               <div v-for="notflw in notfollower" class="card border sidecard">
                 <div class="card-body">
                   <div class="d-flex justify-content-between">
-                    <img :src="notflw.profile" class="rounded rounded-circle" width="15%" />
-                    <div class="ml-3 my-auto">
-                      <router-link
-                        :to="'/profiles/'+notflw.id"
-                        class="font-weight-bold text-dark route"
-                      >{{notflw.username}}</router-link>
-                      {{notflw.name}}
+                    <div class="d-flex">
+                      <img :src="notflw.profile" class="rounded rounded-circle" width="15%" />
+                      <div class="ml-3 my-auto">
+                        <router-link
+                          :to="'/profiles/'+notflw.id"
+                          class="font-weight-bold text-dark route"
+                        >{{notflw.username}}</router-link>
+                        <div>{{notflw.name}}</div>
+                      </div>
                     </div>
                     <!-- <div class="friendlist my-auto"> -->
                     <button class="btn btn-primary btn-sm my-auto btnfollow">Follow</button>
@@ -130,10 +130,36 @@ export default {
       posts: [],
       comment: [],
       iconcolor: [],
-      notfollower: []
+      notfollower: [],
+      likes: []
     };
   },
   methods: {
+    checklike(index) {
+      // this.likes.every(element => {
+      //   if (element.post_id == this.posts[index].id) {
+      //     console.log("in Loop");
+      //     console.log(element.post_id, this.posts[index].id);
+      //     return "fas fa-heart iconsize text-danger";
+      //     // return true
+      //     // break;
+      //   }
+      // });
+      // console.log("out loop");
+      // return "far fa-heart iconsize";
+      // // return false;
+      for (let like of this.likes) {
+        if (like.post_id == this.posts[index].id) {
+          console.log("in Loop");
+          console.log(like.post_id, this.posts[index].id);
+          return "fas fa-heart iconsize text-danger";
+          break;
+          // return true
+          // break;
+        }
+      }
+      return "far fa-heart iconsize";
+    },
     route() {
       return "/profiles/" + this.id;
     },
@@ -145,6 +171,7 @@ export default {
           post_id: postid,
           body: this.comment[index]
         };
+
         this.comment[index] = "";
         axios
           .post("./api/addcomment", data)
@@ -163,14 +190,14 @@ export default {
     likepost(postid, index) {
       this.id = $('meta[name="userid"]').attr("content");
       var data = {
-        user_id: this.id,
+        user_id: $('meta[name="userid"]').attr("content"),
         post_id: postid
       };
       axios
         .post("./api/addlike", data)
         .then(response => {
           this.posts[index].likes = response.data[0];
-          this.iconcolor[index] = response.data[1];
+          this.likes = response.data[1];
         })
         .catch(error => {
           console.log(error.data);
@@ -183,6 +210,7 @@ export default {
       this.user = response.data[0];
       this.posts = response.data[1];
       this.notfollower = response.data[2];
+      this.likes = response.data[3];
       console.log(response.data);
     });
     // axios.get("./api/allpost/").then(response => {
@@ -218,6 +246,7 @@ div.container {
 }
 .crd {
   margin-top: 6%;
+  margin-right: 10%;
 }
 .sidecard {
   max-width: 100%;

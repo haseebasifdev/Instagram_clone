@@ -42,7 +42,8 @@ class LikeController extends Controller
             $like->delete();
             $post->likes = $post->likes - 1;
             $post->save();
-            return ([$post->likes, '']);
+            $postliked = Like::where('user_id', $request->user_id)->get();
+            return ([$post->likes, $postliked]);
         } else {
             Like::create([
                 'user_id' => $request->user_id,
@@ -50,7 +51,8 @@ class LikeController extends Controller
             ]);
             $post->likes = $post->likes + 1;
             $post->save();
-            return ([$post->likes, ' text-danger']);
+            $postliked = Like::where('user_id', $request->user_id)->get();
+            return ([$post->likes, $postliked]);
         }
     }
 

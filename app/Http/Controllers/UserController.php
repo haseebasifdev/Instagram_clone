@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Post;
+use App\Like;
 use Illuminate\Http\Request;
 
 use Illuminate\Validation\Rule;
@@ -50,9 +51,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $postlikes = Like::where('user_id', $user->id)->get();
         $notFolloew = User::where('id', '!=', $user->id)->get();
         $post = Post::where('user_id', $user->id)->get();
-        return [$user, $post, $notFolloew];
+        return [$user, $post, $notFolloew, $postlikes];
     }
 
     /**

@@ -24,17 +24,17 @@
         /* .navborder {
             border-bottom: 0.0001em solid grey;
         } */
-            .padding {
-                padding-left: 15% ;
-                padding-right: 15%;
-            }
+        .padding {
+            padding-left: 15%;
+            padding-right: 15%;
+        }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-white sticky-top bg-white border-bottom p-1 ">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        <nav class="navbar navbar-expand-lg bg-white sticky-top  border-bottom p-1 ">
+            <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -43,16 +43,17 @@
                 <ul class="navbar-nav mr-auto ">
                     <li class="nav-item active  ">
                         <router-link to="/" class="nav-link">
-                            <h5 class=" text-dark my-auto instagram">Instagram Clone</h5>
+                            <h5 class=" text-dark my-auto instagram font-weight-bold"
+                                style="font-family:Lucida Handwriting;">Instagram</h5>
                         </router-link>
                     </li>
 
                 </ul>
-                <form class="form-inline my-auto ">
+                <form class="form-inline my-auto p-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 </form>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item ">
                         <router-link to="/" class="nav-link"><i class="fas fa-home fa-lg"></i></router-link>
                     </li>
                     <li class="nav-item">

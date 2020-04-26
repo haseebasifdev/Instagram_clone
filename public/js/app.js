@@ -2332,6 +2332,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 //
 //
 //
@@ -2463,10 +2469,47 @@ __webpack_require__.r(__webpack_exports__);
       posts: [],
       comment: [],
       iconcolor: [],
-      notfollower: []
+      notfollower: [],
+      likes: []
     };
   },
   methods: {
+    checklike: function checklike(index) {
+      // this.likes.every(element => {
+      //   if (element.post_id == this.posts[index].id) {
+      //     console.log("in Loop");
+      //     console.log(element.post_id, this.posts[index].id);
+      //     return "fas fa-heart iconsize text-danger";
+      //     // return true
+      //     // break;
+      //   }
+      // });
+      // console.log("out loop");
+      // return "far fa-heart iconsize";
+      // // return false;
+      var _iterator = _createForOfIteratorHelper(this.likes),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var like = _step.value;
+
+          if (like.post_id == this.posts[index].id) {
+            console.log("in Loop");
+            console.log(like.post_id, this.posts[index].id);
+            return "fas fa-heart iconsize text-danger";
+            break; // return true
+            // break;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      return "far fa-heart iconsize";
+    },
     route: function route() {
       return "/profiles/" + this.id;
     },
@@ -2496,12 +2539,12 @@ __webpack_require__.r(__webpack_exports__);
 
       this.id = $('meta[name="userid"]').attr("content");
       var data = {
-        user_id: this.id,
+        user_id: $('meta[name="userid"]').attr("content"),
         post_id: postid
       };
       axios.post("./api/addlike", data).then(function (response) {
         _this2.posts[index].likes = response.data[0];
-        _this2.iconcolor[index] = response.data[1];
+        _this2.likes = response.data[1];
       })["catch"](function (error) {
         console.log(error.data);
       });
@@ -2515,6 +2558,7 @@ __webpack_require__.r(__webpack_exports__);
       _this3.user = response.data[0];
       _this3.posts = response.data[1];
       _this3.notfollower = response.data[2];
+      _this3.likes = response.data[3];
       console.log(response.data);
     }); // axios.get("./api/allpost/").then(response => {
     //   this.posts = response.data;
@@ -7362,7 +7406,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-f2b6376c] {\n  font-size: 30px;\n}\ndiv.bio[data-v-f2b6376c] {\n  font-size: 18px;\n}\ndiv.container[data-v-f2b6376c] {\n  margin-top: 2%;\n}\n.route[data-v-f2b6376c]:hover {\n  text-decoration: none;\n}\n.crd[data-v-f2b6376c] {\n  margin-top: 6%;\n}\n.sidecard[data-v-f2b6376c] {\n  max-width: 100%;\n  max-height: 450px;\n  overflow-y: auto;\n}\n.friendlist[data-v-f2b6376c] {\n  margin-left: 5%;\n  /* float: right; */\n}\n.like[data-v-f2b6376c],\n.comments[data-v-f2b6376c] {\n  font-size: 12px;\n}\np.comments[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\n.iconsize[data-v-f2b6376c] {\n  font-size: 1.5rem;\n}\n.iconcover[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\ninput[data-v-f2b6376c]:focus {\n  box-shadow: none;\n}\n.borderpost[data-v-f2b6376c] {\n  border: 0.0001em solid gainsboro;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-f2b6376c] {\n  font-size: 30px;\n}\ndiv.bio[data-v-f2b6376c] {\n  font-size: 18px;\n}\ndiv.container[data-v-f2b6376c] {\n  margin-top: 2%;\n}\n.route[data-v-f2b6376c]:hover {\n  text-decoration: none;\n}\n.crd[data-v-f2b6376c] {\n  margin-top: 6%;\n  margin-right: 10%;\n}\n.sidecard[data-v-f2b6376c] {\n  max-width: 100%;\n  max-height: 450px;\n  overflow-y: auto;\n}\n.friendlist[data-v-f2b6376c] {\n  margin-left: 5%;\n  /* float: right; */\n}\n.like[data-v-f2b6376c],\n.comments[data-v-f2b6376c] {\n  font-size: 12px;\n}\np.comments[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\n.iconsize[data-v-f2b6376c] {\n  font-size: 1.5rem;\n}\n.iconcover[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\ninput[data-v-f2b6376c]:focus {\n  box-shadow: none;\n}\n.borderpost[data-v-f2b6376c] {\n  border: 0.0001em solid gainsboro;\n}\n", ""]);
 
 // exports
 
@@ -60682,11 +60726,7 @@ var render = function() {
                                   }
                                 }
                               },
-                              [
-                                _c("i", {
-                                  staticClass: "far fa-heart iconsize"
-                                })
-                              ]
+                              [_c("i", { class: _vm.checklike(index) })]
                             ),
                             _vm._v(" "),
                             _vm._m(0, true),
@@ -60790,10 +60830,10 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-4 sidebar" }, [
-            _c("div", { staticClass: "d-flex" }, [
+            _c("div", { staticClass: "d-flex position-fixed" }, [
               _c("img", {
-                staticClass: "rounded rounded-circle",
-                attrs: { src: _vm.user.profile, width: "20%" }
+                staticClass: "rounded rounded-circle my-auto",
+                attrs: { src: _vm.user.profile, width: "7%", height: "7%" }
               }),
               _vm._v(" "),
               _c(
@@ -60819,7 +60859,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "crd" },
+              { staticClass: "crd position-fixed" },
               [
                 _c(
                   "div",
@@ -60853,32 +60893,31 @@ var render = function() {
                         "div",
                         { staticClass: "d-flex justify-content-between" },
                         [
-                          _c("img", {
-                            staticClass: "rounded rounded-circle",
-                            attrs: { src: notflw.profile, width: "15%" }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "ml-3 my-auto" },
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass:
-                                    "font-weight-bold text-dark route",
-                                  attrs: { to: "/profiles/" + notflw.id }
-                                },
-                                [_vm._v(_vm._s(notflw.username))]
-                              ),
-                              _vm._v(
-                                "\n                    " +
-                                  _vm._s(notflw.name) +
-                                  "\n                  "
-                              )
-                            ],
-                            1
-                          ),
+                          _c("div", { staticClass: "d-flex" }, [
+                            _c("img", {
+                              staticClass: "rounded rounded-circle",
+                              attrs: { src: notflw.profile, width: "15%" }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "ml-3 my-auto" },
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass:
+                                      "font-weight-bold text-dark route",
+                                    attrs: { to: "/profiles/" + notflw.id }
+                                  },
+                                  [_vm._v(_vm._s(notflw.username))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", [_vm._v(_vm._s(notflw.name))])
+                              ],
+                              1
+                            )
+                          ]),
                           _vm._v(" "),
                           _c(
                             "button",
