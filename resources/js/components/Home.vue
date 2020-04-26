@@ -69,12 +69,12 @@
             <!-- Card End -->
           </div>
           <div class="col-md-4 sidebar">
-            <div class="d-flex position-fixed">
+            <div class="d-flex position-fixed py-4 ml-2">
               <img
                 :src="user.profile"
                 class="rounded rounded-circle my-auto"
-                width="7%"
-                height="7%"
+                width="11.4%"
+                height="11.4%"
               />
               <div class="ml-3 my-auto">
                 <router-link
@@ -86,19 +86,23 @@
               </div>
             </div>
             <div class="crd position-fixed">
-              <div class="d-flex justify-content-between">
-                <h6
-                  class="text-muted font-weight-bold my-auto"
-                  style="font-size:0.8rem"
-                >Suggesions For you</h6>
-                <router-link to="/addfriends" class="route my-auto">See all</router-link>
+              <div class="justify-content-between">
+                <div class="text-muted font-weight-bold" style="font-size:0.8rem">
+                  Suggesions For you
+                  <router-link to="/addfriends" class="route ml-4">See all</router-link>
+                </div>
               </div>
-              <div v-for="notflw in notfollower" class="card border sidecard">
-                <div class="card-body">
+              <div v-for="notflw in notfollower" class=" sidecard">
+                <div class="">
                   <div class="d-flex justify-content-between">
-                    <div class="d-flex">
-                      <img :src="notflw.profile" class="rounded rounded-circle" width="15%" />
-                      <div class="ml-3 my-auto">
+                    <div class="d-flex ml-1">
+                      <img
+                        :src="notflw.profile"
+                        class="rounded rounded-circle my-auto"
+                        width="13%"
+                        height="65%"
+                      />
+                      <div class="ml-3 my-auto text-small">
                         <router-link
                           :to="'/profiles/'+notflw.id"
                           class="font-weight-bold text-dark route"
@@ -107,7 +111,7 @@
                       </div>
                     </div>
                     <!-- <div class="friendlist my-auto"> -->
-                    <button class="btn btn-primary btn-sm my-auto btnfollow">Follow</button>
+                    <button class="btn text-primary btn-sm my-auto">Follow</button>
                     <!-- </div> -->
                   </div>
                 </div>
@@ -150,12 +154,10 @@ export default {
       // // return false;
       for (let like of this.likes) {
         if (like.post_id == this.posts[index].id) {
-          console.log("in Loop");
+          // console.log("in Loop");
           console.log(like.post_id, this.posts[index].id);
           return "fas fa-heart iconsize text-danger";
           break;
-          // return true
-          // break;
         }
       }
       return "far fa-heart iconsize";
@@ -245,8 +247,8 @@ div.container {
   text-decoration: none;
 }
 .crd {
-  margin-top: 6%;
-  margin-right: 10%;
+  margin-top: 7%;
+  margin-right: 15%;
 }
 .sidecard {
   max-width: 100%;

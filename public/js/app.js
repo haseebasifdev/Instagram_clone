@@ -2461,6 +2461,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2495,11 +2499,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           var like = _step.value;
 
           if (like.post_id == this.posts[index].id) {
-            console.log("in Loop");
+            // console.log("in Loop");
             console.log(like.post_id, this.posts[index].id);
             return "fas fa-heart iconsize text-danger";
-            break; // return true
-            // break;
+            break;
           }
         }
       } catch (err) {
@@ -7406,7 +7409,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-f2b6376c] {\n  font-size: 30px;\n}\ndiv.bio[data-v-f2b6376c] {\n  font-size: 18px;\n}\ndiv.container[data-v-f2b6376c] {\n  margin-top: 2%;\n}\n.route[data-v-f2b6376c]:hover {\n  text-decoration: none;\n}\n.crd[data-v-f2b6376c] {\n  margin-top: 6%;\n  margin-right: 10%;\n}\n.sidecard[data-v-f2b6376c] {\n  max-width: 100%;\n  max-height: 450px;\n  overflow-y: auto;\n}\n.friendlist[data-v-f2b6376c] {\n  margin-left: 5%;\n  /* float: right; */\n}\n.like[data-v-f2b6376c],\n.comments[data-v-f2b6376c] {\n  font-size: 12px;\n}\np.comments[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\n.iconsize[data-v-f2b6376c] {\n  font-size: 1.5rem;\n}\n.iconcover[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\ninput[data-v-f2b6376c]:focus {\n  box-shadow: none;\n}\n.borderpost[data-v-f2b6376c] {\n  border: 0.0001em solid gainsboro;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-f2b6376c] {\n  font-size: 30px;\n}\ndiv.bio[data-v-f2b6376c] {\n  font-size: 18px;\n}\ndiv.container[data-v-f2b6376c] {\n  margin-top: 2%;\n}\n.route[data-v-f2b6376c]:hover {\n  text-decoration: none;\n}\n.crd[data-v-f2b6376c] {\n  margin-top: 7%;\n  margin-right: 15%;\n}\n.sidecard[data-v-f2b6376c] {\n  max-width: 100%;\n  max-height: 450px;\n  overflow-y: auto;\n}\n.friendlist[data-v-f2b6376c] {\n  margin-left: 5%;\n  /* float: right; */\n}\n.like[data-v-f2b6376c],\n.comments[data-v-f2b6376c] {\n  font-size: 12px;\n}\np.comments[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\n.iconsize[data-v-f2b6376c] {\n  font-size: 1.5rem;\n}\n.iconcover[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\ninput[data-v-f2b6376c]:focus {\n  box-shadow: none;\n}\n.borderpost[data-v-f2b6376c] {\n  border: 0.0001em solid gainsboro;\n}\n", ""]);
 
 // exports
 
@@ -60830,10 +60833,14 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-4 sidebar" }, [
-            _c("div", { staticClass: "d-flex position-fixed" }, [
+            _c("div", { staticClass: "d-flex position-fixed py-4 ml-2" }, [
               _c("img", {
                 staticClass: "rounded rounded-circle my-auto",
-                attrs: { src: _vm.user.profile, width: "7%", height: "7%" }
+                attrs: {
+                  src: _vm.user.profile,
+                  width: "11.4%",
+                  height: "11.4%"
+                }
               }),
               _vm._v(" "),
               _c(
@@ -60861,47 +60868,50 @@ var render = function() {
               "div",
               { staticClass: "crd position-fixed" },
               [
-                _c(
-                  "div",
-                  { staticClass: "d-flex justify-content-between" },
-                  [
-                    _c(
-                      "h6",
-                      {
-                        staticClass: "text-muted font-weight-bold my-auto",
-                        staticStyle: { "font-size": "0.8rem" }
-                      },
-                      [_vm._v("Suggesions For you")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "route my-auto",
-                        attrs: { to: "/addfriends" }
-                      },
-                      [_vm._v("See all")]
-                    )
-                  ],
-                  1
-                ),
+                _c("div", { staticClass: "justify-content-between" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "text-muted font-weight-bold",
+                      staticStyle: { "font-size": "0.8rem" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                Suggesions For you\n                "
+                      ),
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "route ml-4",
+                          attrs: { to: "/addfriends" }
+                        },
+                        [_vm._v("See all")]
+                      )
+                    ],
+                    1
+                  )
+                ]),
                 _vm._v(" "),
                 _vm._l(_vm.notfollower, function(notflw) {
-                  return _c("div", { staticClass: "card border sidecard" }, [
-                    _c("div", { staticClass: "card-body" }, [
+                  return _c("div", { staticClass: " sidecard" }, [
+                    _c("div", {}, [
                       _c(
                         "div",
                         { staticClass: "d-flex justify-content-between" },
                         [
-                          _c("div", { staticClass: "d-flex" }, [
+                          _c("div", { staticClass: "d-flex ml-1" }, [
                             _c("img", {
-                              staticClass: "rounded rounded-circle",
-                              attrs: { src: notflw.profile, width: "15%" }
+                              staticClass: "rounded rounded-circle my-auto",
+                              attrs: {
+                                src: notflw.profile,
+                                width: "13%",
+                                height: "65%"
+                              }
                             }),
                             _vm._v(" "),
                             _c(
                               "div",
-                              { staticClass: "ml-3 my-auto" },
+                              { staticClass: "ml-3 my-auto text-small" },
                               [
                                 _c(
                                   "router-link",
@@ -60921,10 +60931,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "button",
-                            {
-                              staticClass:
-                                "btn btn-primary btn-sm my-auto btnfollow"
-                            },
+                            { staticClass: "btn text-primary btn-sm my-auto" },
                             [_vm._v("Follow")]
                           )
                         ]

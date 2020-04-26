@@ -40,7 +40,7 @@
             </button>
 
             <div class="collapse navbar-collapse  padding" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto ">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item active  ">
                         <router-link to="/" class="nav-link">
                             <h5 class=" text-dark my-auto instagram font-weight-bold"
@@ -52,7 +52,7 @@
                 <form class="form-inline my-auto p-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 </form>
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ml-auto ">
                     <li class="nav-item ">
                         <router-link to="/" class="nav-link"><i class="fas fa-home fa-lg"></i></router-link>
                     </li>
