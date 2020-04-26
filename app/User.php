@@ -38,13 +38,11 @@ class User extends Authenticatable
     ];
     public function getProfileAttribute($value)
     {
-        // if ($value) {
-        // return (asset('images/' . $value));
-        // return (asset('images/download.jfif'));
-        // } 
-        // else {
-        //     return (asset('/images/download.png'));
-        // }
-        return (asset($value ? 'images/' . $value  : 'images/download.jfif'));
+        if ($value) {
+            return (asset('profiles/' . $value));
+        } else {
+            return (asset('images/download.jfif'));
+        }
+        // return (asset($value ? 'images/' . $value  : 'images/download.jfif'));
     }
 }

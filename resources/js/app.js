@@ -40,6 +40,7 @@ const routes = [{
         path: '/profiles/:id',
         component: Profile,
 
+
     },
     {
         path: '/',
@@ -63,6 +64,7 @@ const routes = [{
     },
 ]
 const router = new VueRouter({
+   
     routes // short for `routes: routes`
 })
 Vue.filter('mytime', function (created) {

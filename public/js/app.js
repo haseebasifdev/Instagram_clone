@@ -1932,6 +1932,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2040,19 +2050,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       id: "",
-      user: []
+      users: []
     };
   },
   mounted: function mounted() {
     var _this = this;
 
     this.id = $('meta[name="userid"]').attr("content");
-    axios.get("./api/user/" + this.id).then(function (response) {
-      _this.user = response.data[0];
+    axios.get("./api/alluser/" + this.id).then(function (response) {
+      _this.users = response.data;
       console.log(response.data);
     });
     console.log("Component mounted.");
@@ -2168,12 +2199,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       id: "",
       user: {},
-      name: "Haseeb asif"
+      picture: ""
     };
   },
   methods: {
@@ -2184,17 +2250,71 @@ __webpack_require__.r(__webpack_exports__);
         bio: this.user.bio,
         email: this.user.email,
         gender: this.user.gender
-      }; // axios.post("./api/updateprofile" + this.user.id);
-
+      };
+      axios.post("./api/updateprofile/" + this.user.id, data).then(function (response) {
+        console.log("updated");
+        Toast.fire({
+          icon: "success",
+          title: "Updated successfully"
+        });
+      })["catch"](function (error) {
+        Toast.fire({
+          icon: "error",
+          title: "Eroor Occure in Updated Try Again"
+        });
+        console.log(error.data);
+      });
       console.log("Updated");
+    },
+    onFileChange: function onFileChange(e) {
+      var _this = this;
+
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(e.target.files[0]);
+
+      fileReader.onload = function (e) {
+        _this.picture = e.target.result;
+      };
+    },
+    showmodel: function showmodel() {
+      $("#profilemodel").modal("show");
+    },
+    updateprofile: function updateprofile() {
+      var _this2 = this;
+
+      // this.id = $('meta[name="userid"]').attr("content");
+      var data = {
+        profile: this.picture
+      };
+      axios.post("./api/updatedprofilepicture/" + this.user.id, data).then(function (response) {
+        _this2.user.profile = _this2.picture;
+        $("#profilemodel").modal("hide"); // if (response.status === 422) {
+        //   this.errorInputs = res.body;
+        // } else {
+        //   alert("Unkown error!");
+        // }
+        // this.$router.push("/");
+
+        Toast.fire({
+          icon: "success",
+          title: "Profie Updated successfully"
+        });
+        console.log(response);
+      })["catch"](function (error) {
+        // this.errorInputs = error.response.data.errors;
+        Toast.fire({
+          icon: "error",
+          title: "Something went wrong please try again"
+        }); // console.log(error.response.data.errors);
+      });
     }
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this3 = this;
 
     this.id = $('meta[name="userid"]').attr("content");
     axios.get("./api/user/" + this.$route.params.id).then(function (response) {
-      _this.user = response.data;
+      _this3.user = response.data[0];
       console.log(response.data);
     });
     console.log("Component mounted.");
@@ -2318,6 +2438,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2325,30 +2462,34 @@ __webpack_require__.r(__webpack_exports__);
       user: [],
       posts: [],
       comment: [],
-      iconcolor: []
+      iconcolor: [],
+      notfollower: []
     };
   },
   methods: {
     route: function route() {
       return "/profiles/" + this.id;
     },
-    indexshow: function indexshow(postid, index) {
+    commentpost: function commentpost(postid, index) {
       var _this = this;
 
       this.id = $('meta[name="userid"]').attr("content");
-      var data = {
-        user_id: this.id,
-        post_id: postid,
-        body: this.comment[index]
-      };
-      this.comment[index] = "";
-      axios.post("./api/addcomment", data).then(function (response) {
-        console.log(response.data);
-        _this.posts[index].comments = response.data; // this.comment[index] = "";
-      })["catch"](function (error) {
-        // this.comment[index] = "";
-        console.log(error.data);
-      }); // console.log(post, index);
+
+      if (this.comment[index]) {
+        var data = {
+          user_id: this.id,
+          post_id: postid,
+          body: this.comment[index]
+        };
+        this.comment[index] = "";
+        axios.post("./api/addcomment", data).then(function (response) {
+          console.log(response.data);
+          _this.posts[index].comments = response.data; // this.comment[index] = "";
+        })["catch"](function (error) {
+          // this.comment[index] = "";
+          console.log(error.data);
+        }); // console.log(post, index);
+      }
     },
     likepost: function likepost(postid, index) {
       var _this2 = this;
@@ -2372,12 +2513,13 @@ __webpack_require__.r(__webpack_exports__);
     this.id = $('meta[name="userid"]').attr("content");
     axios.get("./api/user/" + this.id).then(function (response) {
       _this3.user = response.data[0];
+      _this3.posts = response.data[1];
+      _this3.notfollower = response.data[2];
       console.log(response.data);
-    });
-    axios.get("./api/allpost/").then(function (response) {
-      _this3.posts = response.data;
-      console.log(response.data);
-    });
+    }); // axios.get("./api/allpost/").then(response => {
+    //   this.posts = response.data;
+    //   console.log(response.data);
+    // });
   },
   computed: {
     username: function username() {
@@ -2453,24 +2595,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      id: "",
+      id: " ",
+      authid: "",
+      visiteduser: " ",
       user: [],
       posts: [],
       timenow: ""
     };
   },
-  mounted: function mounted() {
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     var _this = this;
 
-    axios.get("./api/user/" + this.$route.params.id).then(function (response) {
+    this.visiteduser = to.params.id;
+    axios.get("./api/user/" + to.params.id).then(function (response) {
       _this.user = response.data[0];
       _this.posts = response.data[1];
       console.log(response.data);
     });
+    console.log("before route update mounted.");
+    next();
+  },
+  methods: {
+    showmodel: function showmodel() {
+      $("#profilemodel").modal("show");
+    },
+    hidemodel: function hidemodel() {
+      $("#profilemodel").modal("hide");
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    axios.get("./api/user/" + this.$route.params.id).then(function (response) {
+      _this2.user = response.data[0];
+      _this2.posts = response.data[1];
+      console.log(response.data);
+    });
     console.log("Component mounted.");
+    this.visiteduser = this.$route.params.id;
+    this.authid = $('meta[name="userid"]').attr("content");
   },
   computed: {
     username: function username() {
@@ -2479,7 +2667,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.id;
     }
   } // watch: {
-  //   this.timenow = moment();
+  //   mounted();
   // }
 
 });
@@ -2495,10 +2683,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
 //
 //
 //
@@ -2562,7 +2746,7 @@ __webpack_require__.r(__webpack_exports__);
     })["catch"](function (error) {
       console.log(error.data);
     });
-    console.log('mounted');
+    console.log("mounted");
   },
   computed: {
     username: function username() {
@@ -7121,7 +7305,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-6aebc474] {\n  font-size: 30px;\n}\ndiv.bio[data-v-6aebc474] {\n  font-size: 18px;\n}\n.friendlist[data-v-6aebc474] {\n  margin-left: 65%;\n}\n.route[data-v-6aebc474]:hover {\n  text-decoration: none;\n}\ndiv.sidecard[data-v-6aebc474] {\n  margin-top: 10%;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-6aebc474] {\n  font-size: 30px;\n}\ndiv.bio[data-v-6aebc474] {\n  font-size: 18px;\n}\n.friendlist[data-v-6aebc474] {\n  margin-left: 65%;\n}\n.route[data-v-6aebc474]:hover {\n  text-decoration: none;\n}\ndiv.sidecard[data-v-6aebc474] {\n  margin-top: 5%;\n}\ndiv.main[data-v-6aebc474] {\n  margin-left: 20%;\n  margin-right: 20%;\n}\n", ""]);
 
 // exports
 
@@ -7178,7 +7362,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-f2b6376c] {\n  font-size: 30px;\n}\ndiv.bio[data-v-f2b6376c] {\n  font-size: 18px;\n}\ndiv.container[data-v-f2b6376c] {\n  margin-top: 2%;\n}\n.route[data-v-f2b6376c]:hover {\n  text-decoration: none;\n}\n.crd[data-v-f2b6376c] {\n  margin-top: 6%;\n}\n.sidecard[data-v-f2b6376c] {\n  max-width: 100%;\n  max-height: 450px;\n  overflow-y: auto;\n}\n.friendlist[data-v-f2b6376c] {\n  margin-left: 25%;\n  /* float: right; */\n}\n.like[data-v-f2b6376c],\n.comments[data-v-f2b6376c] {\n  font-size: 12px;\n}\np.comments[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-f2b6376c] {\n  font-size: 30px;\n}\ndiv.bio[data-v-f2b6376c] {\n  font-size: 18px;\n}\ndiv.container[data-v-f2b6376c] {\n  margin-top: 2%;\n}\n.route[data-v-f2b6376c]:hover {\n  text-decoration: none;\n}\n.crd[data-v-f2b6376c] {\n  margin-top: 6%;\n}\n.sidecard[data-v-f2b6376c] {\n  max-width: 100%;\n  max-height: 450px;\n  overflow-y: auto;\n}\n.friendlist[data-v-f2b6376c] {\n  margin-left: 5%;\n  /* float: right; */\n}\n.like[data-v-f2b6376c],\n.comments[data-v-f2b6376c] {\n  font-size: 12px;\n}\np.comments[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\n.iconsize[data-v-f2b6376c] {\n  font-size: 1.5rem;\n}\n.iconcover[data-v-f2b6376c]:hover {\n  cursor: pointer;\n}\ninput[data-v-f2b6376c]:focus {\n  box-shadow: none;\n}\n.borderpost[data-v-f2b6376c] {\n  border: 0.0001em solid gainsboro;\n}\n", ""]);
 
 // exports
 
@@ -7197,7 +7381,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-3bd692e4] {\n  font-size: 30px;\n}\ndiv.bio[data-v-3bd692e4] {\n  font-size: 18px;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-3bd692e4] {\n  font-size: 30px;\n}\ndiv.bio[data-v-3bd692e4] {\n  font-size: 18px;\n}\ndiv.settingicon[data-v-3bd692e4]:hover {\n  cursor: pointer;\n}\ndiv.modelcontent[data-v-3bd692e4] {\n  border: 1px solid white;\n  border-radius: 20px;\n}\n", ""]);
 
 // exports
 
@@ -59829,83 +60013,91 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container top mt-4" }, [
-    _c(
-      "form",
-      {
-        attrs: { enctype: "multipart/form-data" },
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            return _vm.savepost()
-          }
-        }
-      },
-      [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
-            _vm._v("Caption")
-          ]),
-          _vm._v(" "),
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.body,
-                expression: "body"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              id: "exampleFormControlTextarea1",
-              placeholder: "Write a caption"
-            },
-            domProps: { value: _vm.body },
+  return _c("div", { staticClass: "main sidecard" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c(
+          "form",
+          {
+            attrs: { enctype: "multipart/form-data" },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.body = $event.target.value
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.savepost()
               }
             }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "custom-file" }, [
-          _c("input", {
-            staticClass: "custom-file-input",
-            attrs: { type: "file", required: "" },
-            on: { change: _vm.onFileChange }
-          }),
-          _vm._v(" "),
-          _c(
-            "label",
-            {
-              staticClass: "custom-file-label",
-              attrs: { for: "validatedCustomFile" }
-            },
-            [_vm._v("Choose Image to Post...")]
-          ),
-          _vm._v(" "),
-          _vm.errorInputs
-            ? _c("small", { staticClass: "text-danger" }, [
-                _vm._v(_vm._s(_vm.errorInputs.avatar[0]))
-              ])
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary mt-3 mx-auto",
-            attrs: { type: "submit" }
           },
-          [_vm._v("Submit")]
+          [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
+                _vm._v("Caption")
+              ]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.body,
+                    expression: "body"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  id: "exampleFormControlTextarea1",
+                  placeholder: "Write a caption"
+                },
+                domProps: { value: _vm.body },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.body = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "custom-file" }, [
+              _c("input", {
+                staticClass: "custom-file-input",
+                attrs: { type: "file", required: "" },
+                on: { change: _vm.onFileChange }
+              }),
+              _vm._v(" "),
+              _c(
+                "label",
+                {
+                  staticClass: "custom-file-label",
+                  attrs: { for: "validatedCustomFile" }
+                },
+                [_vm._v("Choose Image to Post...")]
+              )
+            ]),
+            _vm._v(" "),
+            _vm.picture
+              ? _c(
+                  "button",
+                  {
+                    staticClass:
+                      "btn btn-primary mt-3 mx-auto btn-sm btn-block",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v("Post")]
+                )
+              : _vm._e()
+          ]
         )
-      ]
-    )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-4 sidecard" }, [
+        _c("img", {
+          staticClass: " img-fluid img-thumbnail",
+          attrs: { src: _vm.picture, width: "100%" }
+        })
+      ])
+    ])
   ])
 }
 var staticRenderFns = []
@@ -59938,38 +60130,51 @@ var render = function() {
         _c("div", { staticClass: "sidecard" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "card border" }, [
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "d-flex" }, [
-                _c("img", {
-                  staticClass: "rounded rounded-circle",
-                  attrs: { src: "/images/download.jfif", width: "6%" }
-                }),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "ml-3 my-auto" },
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "font-weight-bold text-dark route",
-                        attrs: { to: "/" }
-                      },
-                      [_vm._v(_vm._s(_vm.user.username))]
-                    ),
+          _c(
+            "div",
+            { staticClass: "crd" },
+            _vm._l(_vm.users, function(user) {
+              return _c("div", { staticClass: "card border" }, [
+                _c("div", { staticClass: "card-body" }, [
+                  _c("div", { staticClass: "d-flex justify-content-between" }, [
+                    _c("div", { staticClass: " d-flex" }, [
+                      _c("img", {
+                        staticClass: "rounded rounded-circle",
+                        attrs: { src: user.profile, width: "8%" }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: " ml-2 my-auto" },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "font-weight-bold text-dark route",
+                              attrs: { to: "/profiles/" + user.id }
+                            },
+                            [_vm._v(_vm._s(user.username))]
+                          ),
+                          _vm._v(" "),
+                          _c("div", [_vm._v(_vm._s(user.name))])
+                        ],
+                        1
+                      )
+                    ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "text-muted" }, [
-                      _vm._v(_vm._s(_vm.user.name))
-                    ])
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _vm._m(1)
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-sm my-auto btnfollow"
+                      },
+                      [_vm._v("Follow")]
+                    )
+                  ])
+                ])
               ])
-            ])
-          ])
+            }),
+            0
+          )
         ])
       ]),
       _vm._v(" "),
@@ -59983,16 +60188,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("h6", { staticClass: "ml-2" }, [_c("b", [_vm._v("Suggested")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "friendlist my-auto" }, [
-      _c("button", { staticClass: "btn btn-primary btn-sm font-weight-bold" }, [
-        _vm._v("Follow")
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -60026,7 +60221,7 @@ var render = function() {
         _c("div", { staticClass: "d-flex ml-4 m-4" }, [
           _c("img", {
             staticClass: "rounded rounded-circle prflimg",
-            attrs: { src: "/images/download.jfif", width: "7%", height: "7%" }
+            attrs: { src: _vm.user.profile, width: "7%", height: "7%" }
           }),
           _vm._v(" "),
           _c("div", { staticClass: "my-auto username d-block" }, [
@@ -60038,9 +60233,18 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("button", { staticClass: "profilebtn" }, [
-          _vm._v("Change Profile Photo")
-        ]),
+        _c(
+          "button",
+          {
+            staticClass: "profilebtn",
+            on: {
+              click: function($event) {
+                return _vm.showmodel()
+              }
+            }
+          },
+          [_vm._v("Change Profile Photo")]
+        ),
         _vm._v(" "),
         _c("form", [
           _c("div", { staticClass: "form-group row" }, [
@@ -60278,10 +60482,113 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-1" })
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "profilemodel",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "profilemodelTitle",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "custom-file" }, [
+                  _c("input", {
+                    staticClass: "custom-file-input",
+                    attrs: { type: "file", required: "" },
+                    on: { change: _vm.onFileChange }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "custom-file-label",
+                      attrs: { for: "validatedCustomFile" }
+                    },
+                    [_vm._v("Choose Image to Post...")]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("img", {
+                staticClass: "mx-auto",
+                attrs: { src: _vm.picture, width: "50%", alt: "", srcset: "" }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.updateprofile()
+                      }
+                    }
+                  },
+                  [_vm._v("Save changes")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLongTitle" } },
+        [_vm._v("Modal title")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -60314,23 +60621,42 @@ var render = function() {
             { staticClass: "col-md-8" },
             [
               _vm.posts == 0
-                ? _c("h1", { staticClass: "text-danger" }, [
+                ? _c("h6", { staticClass: "text-danger text-center" }, [
                     _vm._v("No Post Yet")
                   ])
                 : _vm._e(),
               _vm._v(" "),
               _vm._l(_vm.posts, function(post, index) {
-                return _c("div", { key: index, staticClass: "card mb-4" }, [
-                  _c(
-                    "div",
-                    { staticClass: "card-body" },
-                    [
-                      _vm._m(0, true),
-                      _vm._v(" "),
-                      _c("hr"),
+                return _c(
+                  "div",
+                  { key: index, staticClass: "bg-white border mb-4" },
+                  [
+                    _c("div", { staticClass: "borderpost" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "card-title font-weight-bold p-3 my-auto"
+                        },
+                        [
+                          _c("img", {
+                            staticClass: "mr-2 rounded rounded-circle",
+                            attrs: {
+                              src: _vm.user.profile,
+                              width: "5%",
+                              height: "5%",
+                              alt: "",
+                              srcset: ""
+                            }
+                          }),
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.user.name) +
+                              "\n              "
+                          )
+                        ]
+                      ),
                       _vm._v(" "),
                       _c("img", {
-                        staticClass: "my-3",
                         attrs: {
                           src: post.avatar,
                           width: "100%",
@@ -60340,58 +60666,65 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _c("p", { staticClass: "card-text" }, [
-                        _c(
-                          "button",
-                          {
-                            class: "btn " + _vm.iconcolor[index],
-                            on: {
-                              click: function($event) {
-                                return _vm.likepost(post.id, index)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-heart fa-lg" })]
-                        ),
-                        _vm._v(" "),
-                        _vm._m(1, true),
-                        _vm._v(" "),
-                        _vm._m(2, true)
-                      ]),
-                      _vm._v(" "),
                       _c(
-                        "p",
-                        { staticClass: "card-subtitle text-muted like" },
-                        [_vm._v(_vm._s(post.likes) + " Likes")]
+                        "div",
+                        { staticClass: "ml-3 mt-3" },
+                        [
+                          _c("p", { staticClass: "card-text" }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "iconcover",
+                                class: " " + _vm.iconcolor[index],
+                                on: {
+                                  click: function($event) {
+                                    return _vm.likepost(post.id, index)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "far fa-heart iconsize"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(0, true),
+                            _vm._v(" "),
+                            _vm._m(1, true)
+                          ]),
+                          _vm._v(" "),
+                          post.likes > 0
+                            ? _c(
+                                "p",
+                                {
+                                  staticClass:
+                                    "card-subtitle text-dark like font-weight-bold"
+                                },
+                                [_vm._v(_vm._s(post.likes) + " Likes")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          post.comments > 0
+                            ? _c(
+                                "router-link",
+                                {
+                                  staticClass:
+                                    "card-subtitle text-muted comments mt-1",
+                                  attrs: { to: "/post/" + post.id }
+                                },
+                                [_vm._v(_vm._s(post.comments) + " Comment")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-muted mt-1" }, [
+                            _vm._v(_vm._s(_vm._f("mytime")(post.created_at)))
+                          ])
+                        ],
+                        1
                       ),
                       _vm._v(" "),
-                      _c(
-                        "router-link",
-                        {
-                          staticClass: "card-subtitle text-muted comments mt-1",
-                          attrs: { to: "/post/" + post.id }
-                        },
-                        [_vm._v(_vm._s(post.comments) + " Comment")]
-                      ),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "text-muted mt-1" }, [
-                        _vm._v(_vm._s(_vm._f("mytime")(post.created_at)))
-                      ]),
-                      _vm._v(" "),
-                      _c("hr"),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "d-flex" }, [
-                        _c("img", {
-                          staticClass: "mr-2 my-auto",
-                          attrs: {
-                            src: "/images/download.jfif",
-                            width: "7%",
-                            height: "7%",
-                            alt: "",
-                            srcset: ""
-                          }
-                        }),
-                        _vm._v(" "),
+                      _c("div", { staticClass: "d-flex py-2 border-top" }, [
                         _c("input", {
                           directives: [
                             {
@@ -60401,7 +60734,7 @@ var render = function() {
                               expression: "comment[index]"
                             }
                           ],
-                          staticClass: "form-control border-0",
+                          staticClass: "form-control border-0 hover",
                           attrs: {
                             type: "text",
                             placeholder: "Add a Comment..."
@@ -60421,7 +60754,7 @@ var render = function() {
                               ) {
                                 return null
                               }
-                              return _vm.indexshow(post.id, index)
+                              return _vm.commentpost(post.id, index)
                             },
                             input: function($event) {
                               if ($event.target.composing) {
@@ -60432,23 +60765,25 @@ var render = function() {
                           }
                         }),
                         _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn text-primary font-weight-bold",
-                            on: {
-                              click: function($event) {
-                                return _vm.indexshow(post.id, index)
-                              }
-                            }
-                          },
-                          [_vm._v("Post")]
-                        )
+                        _vm.comment[index]
+                          ? _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn text-primary font-weight-bold",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.commentpost(post.id, index)
+                                  }
+                                }
+                              },
+                              [_vm._v("Post")]
+                            )
+                          : _vm._e()
                       ])
-                    ],
-                    1
-                  )
-                ])
+                    ])
+                  ]
+                )
               })
             ],
             2
@@ -60458,7 +60793,7 @@ var render = function() {
             _c("div", { staticClass: "d-flex" }, [
               _c("img", {
                 staticClass: "rounded rounded-circle",
-                attrs: { src: "/images/download.jfif", width: "20%" }
+                attrs: { src: _vm.user.profile, width: "20%" }
               }),
               _vm._v(" "),
               _c(
@@ -60482,66 +60817,85 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "crd" }, [
-              _c(
-                "div",
-                { staticClass: "d-flex justify-content-between" },
-                [
-                  _c("h6", { staticClass: "text-muted font-weight-bold" }, [
-                    _vm._v("Suggesions For you")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "router-link",
-                    { staticClass: "route", attrs: { to: "/addfriends" } },
-                    [_vm._v("See all")]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card border sidecard" }, [
-                _c("div", { staticClass: "card-body" }, [
-                  _c("div", { staticClass: "d-flex" }, [
-                    _c("img", {
-                      staticClass: "rounded rounded-circle",
-                      attrs: { src: "/images/download.jfif", width: "15%" }
-                    }),
-                    _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "crd" },
+              [
+                _c(
+                  "div",
+                  { staticClass: "d-flex justify-content-between" },
+                  [
                     _c(
-                      "div",
-                      { staticClass: "ml-3 my-auto" },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "font-weight-bold text-dark route",
-                            attrs: { to: _vm.route() }
-                          },
-                          [_vm._v(_vm._s(_vm.user.username))]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "text-muted" }, [
-                          _vm._v(_vm._s(_vm.user.name))
-                        ])
-                      ],
-                      1
+                      "h6",
+                      {
+                        staticClass: "text-muted font-weight-bold my-auto",
+                        staticStyle: { "font-size": "0.8rem" }
+                      },
+                      [_vm._v("Suggesions For you")]
                     ),
                     _vm._v(" "),
                     _c(
-                      "div",
-                      { staticClass: "friendlist my-auto" },
-                      [
-                        _c("router-link", { attrs: { to: "/" } }, [
-                          _vm._v("Follow")
-                        ])
-                      ],
-                      1
+                      "router-link",
+                      {
+                        staticClass: "route my-auto",
+                        attrs: { to: "/addfriends" }
+                      },
+                      [_vm._v("See all")]
                     )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.notfollower, function(notflw) {
+                  return _c("div", { staticClass: "card border sidecard" }, [
+                    _c("div", { staticClass: "card-body" }, [
+                      _c(
+                        "div",
+                        { staticClass: "d-flex justify-content-between" },
+                        [
+                          _c("img", {
+                            staticClass: "rounded rounded-circle",
+                            attrs: { src: notflw.profile, width: "15%" }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "ml-3 my-auto" },
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  staticClass:
+                                    "font-weight-bold text-dark route",
+                                  attrs: { to: "/profiles/" + notflw.id }
+                                },
+                                [_vm._v(_vm._s(notflw.username))]
+                              ),
+                              _vm._v(
+                                "\n                    " +
+                                  _vm._s(notflw.name) +
+                                  "\n                  "
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "btn btn-primary btn-sm my-auto btnfollow"
+                            },
+                            [_vm._v("Follow")]
+                          )
+                        ]
+                      )
+                    ])
                   ])
-                ])
-              ])
-            ])
+                })
+              ],
+              2
+            )
           ])
         ])
       ]),
@@ -60555,34 +60909,16 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-title font-weight-bold" }, [
-      _c("img", {
-        staticClass: "mr-2",
-        attrs: {
-          src: "/images/download.jfif",
-          width: "7%",
-          height: "7%",
-          alt: "",
-          srcset: ""
-        }
-      }),
-      _vm._v("\n                Haseeb Asif\n              ")
+    return _c("a", { staticClass: "text-dark iconcover" }, [
+      _c("i", { staticClass: "far fa-comment iconsize mx-2" })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "btn text-primary" }, [
-      _c("i", { staticClass: "fas fa-comment fa-lg" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "btn text-primary" }, [
-      _c("i", { staticClass: "fas fa-location-arrow fa-lg" })
+    return _c("a", { staticClass: "text-primary iconcover" }, [
+      _c("i", { staticClass: "fas fa-location-arrow iconsize" })
     ])
   }
 ]
@@ -60618,7 +60954,7 @@ var render = function() {
               staticClass: "rounded rounded-circle",
               attrs: {
                 src: _vm.user.profile,
-                width: "50%",
+                width: "55%",
                 alt: "",
                 srcset: ""
               }
@@ -60627,27 +60963,53 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-8" }, [
             _c("div", { staticClass: "d-flex mt-3 align-items-center" }, [
-              _c("div", { staticClass: "text-muted mr-3 username" }, [
+              _c("div", { staticClass: "text-muted username" }, [
                 _vm._v(_vm._s(_vm.user.username))
               ]),
               _vm._v(" "),
               _c(
                 "div",
                 [
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "btn btn-light btn-sm",
-                      attrs: { to: "/editprofile/" + this.$route.params.id }
-                    },
-                    [_vm._v("Edit Profile")]
-                  )
+                  _vm.authid == this.$route.params.id
+                    ? _c(
+                        "router-link",
+                        {
+                          staticClass: "btn btn-light btn-sm mx-3",
+                          attrs: { to: "/editprofile/" + this.$route.params.id }
+                        },
+                        [_vm._v("Edit Profile")]
+                      )
+                    : _vm._e()
                 ],
                 1
-              )
+              ),
+              _vm._v(" "),
+              _vm.authid == this.$route.params.id
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "settingicon",
+                      on: {
+                        click: function($event) {
+                          return _vm.showmodel()
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-cog fa-2x" })]
+                  )
+                : _vm._e()
             ]),
             _vm._v(" "),
-            _vm._m(0),
+            _c("div", { staticClass: "d-flex my-3" }, [
+              _c("div", [
+                _c("b", [_vm._v(_vm._s(_vm.posts.length))]),
+                _vm._v(" Posts\n            ")
+              ]),
+              _vm._v(" "),
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._m(1)
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "my-3" }, [
               _c("b", [_vm._v(_vm._s(_vm.user.name))])
@@ -60678,7 +61040,52 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-1" })
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade p-4",
+        attrs: {
+          id: "profilemodel",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "profilemodelTitle",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content d-block modelcontent" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-white btn-block btn-lg border-bottom" },
+                [_vm._v("Change Password")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-white btn-block btn-lg",
+                  on: {
+                    click: function($event) {
+                      return _vm.hidemodel()
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              )
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -60686,15 +61093,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex" }, [
-      _c("div", [_c("b", [_vm._v("8")]), _vm._v(" Posts\n            ")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "mx-4" }, [
-        _c("b", [_vm._v("8")]),
-        _vm._v(" Followers\n            ")
-      ]),
-      _vm._v(" "),
-      _c("div", [_c("b", [_vm._v("8")]), _vm._v(" Following\n            ")])
+    return _c("div", { staticClass: "mx-4" }, [
+      _c("b", [_vm._v("8")]),
+      _vm._v(" Followers\n            ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("b", [_vm._v("8")]),
+      _vm._v(" Following\n            ")
     ])
   }
 ]
@@ -60726,27 +61136,27 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
+    return _c("div", { staticClass: "container mt-0" }, [
       _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-1 col-" }),
+        _c("div", { staticClass: "col-md-1 p-0" }),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-10 col-sm-12" }, [
-          _c("div", { staticClass: "row bg-white" }, [
-            _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "col-md-10 p-0" }, [
+          _c("div", { staticClass: "row container" }, [
+            _c("div", { staticClass: "col-md-8 p-0 m-0" }, [
               _vm._v(
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, iste. Iusto laboriosam voluptate ipsam, minus explicabo suscipit delectus repellendus odit ut repellat, perferendis illum! Delectus perspiciatis ratione quisquam repellat vitae?"
+                "Lorem, ipsum dolor sit Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi amet voluptatibus quis, ad quasi quia aspernatur inventore quaerat repellendus error quibusdam eius, sed impedit autem alias dolorem vero maxime, accusamus fugiat perspiciatis delectus laboriosam repellat labore totam. Enim ipsum architecto aspernatur repellendus magnam ut facilis vitae officia. Molestiae non provident perspiciatis, sint officiis quia dignissimos ducimus at eum recusandae numquam illo corrupti nisi nostrum dolorum praesentium quidem nulla, repellat sunt, nesciunt veritatis minima. Aliquid adipisci fugit perferendis tenetur non maiores est atque soluta, qui officia repellendus corrupti optio, maxime a ipsum unde eos? Itaque esse accusamus voluptatem repellendus deserunt fuga? amet consectetur adipisicing elit. Animi ea nobis ut natus praesentium omnis eius. Velit atque doloribus necessitatibus voluptas ad maxime sapiente quam iusto numquam! Ipsam, similique aspernatur voluptatibus quod quae numquam architecto accusantium repudiandae eius assumenda recusandae dolores sapiente ad dolor, odio molestiae id nam. Voluptatum, repudiandae?"
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-4 bg-white" }, [
+            _c("div", { staticClass: "col-md-4 p-0 m-0" }, [
               _vm._v(
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit placeat obcaecati quidem provident voluptates ratione, cum necessitatibus, architecto culpa asperiores perspiciatis dolorum quo dicta. Illo cumque cum id accusantium corporis?"
+                "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa sequi eos quam magnam ratione ipsam dicta natus, quaerat sapiente vero quibusdam possimus voluptas perferendis, amet distinctio. Saepe, ipsum dicta? Laboriosam delectus pariatur molestiae impedit eum similique ipsa voluptatem doloribus, accusantium aperiam illum totam, architecto neque tempore! Molestias eos molestiae voluptates!"
               )
             ])
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-1 col-" })
+        _c("div", { staticClass: "col-md-1 p-0" })
       ])
     ])
   }

@@ -1,18 +1,14 @@
 <template>
-  <div class="container">
+  <div class="container mt-0">
     <div class="row">
-      <div class="col-md-1 col-"></div>
-      <div class="col-md-10 col-sm-12">
-        <div class="row bg-white">
-          <div
-            class="col-md-8"
-          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, iste. Iusto laboriosam voluptate ipsam, minus explicabo suscipit delectus repellendus odit ut repellat, perferendis illum! Delectus perspiciatis ratione quisquam repellat vitae?</div>
-          <div
-            class="col-md-4 bg-white"
-          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit placeat obcaecati quidem provident voluptates ratione, cum necessitatibus, architecto culpa asperiores perspiciatis dolorum quo dicta. Illo cumque cum id accusantium corporis?</div>
+      <div class="col-md-1 p-0"></div>
+      <div class="col-md-10 p-0">
+        <div class="row container">
+          <div class="col-md-8 p-0 m-0">Lorem, ipsum dolor sit Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi amet voluptatibus quis, ad quasi quia aspernatur inventore quaerat repellendus error quibusdam eius, sed impedit autem alias dolorem vero maxime, accusamus fugiat perspiciatis delectus laboriosam repellat labore totam. Enim ipsum architecto aspernatur repellendus magnam ut facilis vitae officia. Molestiae non provident perspiciatis, sint officiis quia dignissimos ducimus at eum recusandae numquam illo corrupti nisi nostrum dolorum praesentium quidem nulla, repellat sunt, nesciunt veritatis minima. Aliquid adipisci fugit perferendis tenetur non maiores est atque soluta, qui officia repellendus corrupti optio, maxime a ipsum unde eos? Itaque esse accusamus voluptatem repellendus deserunt fuga? amet consectetur adipisicing elit. Animi ea nobis ut natus praesentium omnis eius. Velit atque doloribus necessitatibus voluptas ad maxime sapiente quam iusto numquam! Ipsam, similique aspernatur voluptatibus quod quae numquam architecto accusantium repudiandae eius assumenda recusandae dolores sapiente ad dolor, odio molestiae id nam. Voluptatum, repudiandae?</div>
+          <div class="col-md-4 p-0 m-0">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa sequi eos quam magnam ratione ipsam dicta natus, quaerat sapiente vero quibusdam possimus voluptas perferendis, amet distinctio. Saepe, ipsum dicta? Laboriosam delectus pariatur molestiae impedit eum similique ipsa voluptatem doloribus, accusantium aperiam illum totam, architecto neque tempore! Molestias eos molestiae voluptates!</div>
         </div>
       </div>
-      <div class="col-md-1 col-"></div>
+      <div class="col-md-1 p-0"></div>
     </div>
   </div>
 </template>
@@ -70,7 +66,7 @@ export default {
       .catch(error => {
         console.log(error.data);
       });
-      console.log('mounted');
+    console.log("mounted");
   },
   computed: {
     username() {

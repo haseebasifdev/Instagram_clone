@@ -19,23 +19,31 @@
     <meta name="userid" content="{{auth()->id()}}">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="myProjects/webProject/icofont/css/icofont.min.css">
     <style>
+        /* .navborder {
+            border-bottom: 0.0001em solid grey;
+        } */
+            .padding {
+                padding-left: 15% ;
+                padding-right: 15%;
+            }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-white sticky-top bg-white">
+        <nav class="navbar navbar-expand-lg navbar-white sticky-top bg-white border-bottom p-1 ">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse container" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+            <div class="collapse navbar-collapse  padding" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto ">
+                    <li class="nav-item active  ">
                         <router-link to="/" class="nav-link">
-                            <h5 class=" text-dark">Instagram Clone</h5>
+                            <h5 class=" text-dark my-auto instagram">Instagram Clone</h5>
                         </router-link>
                     </li>
 
@@ -60,9 +68,22 @@
                         <router-link class="nav-link" to="/addpost"><i class="fas fa-plus-circle"></i>
                         </router-link>
                     </li>
+
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/profiles/{{auth()->id()}}"><img  src="/images/download.jfif"
-                                width="20px"></router-link>
+                        <a class="nav-link" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i
+                                class=" fas fa-power-off"></i>
+
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/profiles/{{auth()->id()}}"><img
+                                class=" rounded rounded-circle" style="padding:2px; border:solid 1px grey"
+                                src="{{auth()->user()->profile}}" width="25px">
+                        </router-link>
                     </li>
                 </ul>
             </div>

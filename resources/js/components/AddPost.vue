@@ -1,24 +1,34 @@
 <template>
-  <div class="container top mt-4">
-    <form @submit.prevent="savepost()" enctype="multipart/form-data">
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Caption</label>
-        <textarea
-          class="form-control"
-          v-model="body"
-          id="exampleFormControlTextarea1"
-          placeholder="Write a caption"
-        ></textarea>
-      </div>
-      <div class="custom-file">
-        <input type="file" v-on:change="onFileChange" class="custom-file-input" required />
+  <div class="main sidecard">
+    <div class="row">
+      <div class="col-md-8">
+        <form @submit.prevent="savepost()" enctype="multipart/form-data" class>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Caption</label>
+            <textarea
+              class="form-control"
+              v-model="body"
+              id="exampleFormControlTextarea1"
+              placeholder="Write a caption"
+            ></textarea>
+          </div>
+          <div class="custom-file">
+            <input type="file" v-on:change="onFileChange" class="custom-file-input" required />
 
-        <label class="custom-file-label" for="validatedCustomFile">Choose Image to Post...</label>
-        <small class="text-danger" v-if="errorInputs">{{errorInputs.avatar[0]}}</small>
-      </div>
+            <label class="custom-file-label" for="validatedCustomFile">Choose Image to Post...</label>
+          </div>
 
-      <button type="submit" class="btn btn-primary mt-3 mx-auto">Submit</button>
-    </form>
+          <button
+            type="submit"
+            class="btn btn-primary mt-3 mx-auto btn-sm btn-block"
+            v-if="picture"
+          >Post</button>
+        </form>
+      </div>
+      <div class="col-md-4 sidecard">
+        <img :src="picture" width="100%" class=" img-fluid img-thumbnail" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -103,6 +113,10 @@ div.bio {
   text-decoration: none;
 }
 div.sidecard {
-  margin-top: 10%;
+  margin-top: 5%;
+}
+div.main {
+  margin-left: 20%;
+  margin-right: 20%;
 }
 </style>

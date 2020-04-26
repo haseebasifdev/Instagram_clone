@@ -5,21 +5,25 @@
       <div class="col-md-10 px-3">
         <div class="row">
           <div class="col-md-4 text-center my-4">
-            <img class="rounded rounded-circle" :src="user.profile" width="50%" alt srcset />
+            <img class="rounded rounded-circle" :src="user.profile" width="55%" alt srcset />
           </div>
           <div class="col-md-8">
             <div class="d-flex mt-3 align-items-center">
-              <div class="text-muted mr-3 username">{{user.username}}</div>
+              <div class="text-muted username">{{user.username}}</div>
               <div>
                 <router-link
+                  v-if="authid==this.$route.params.id"
                   :to="'/editprofile/'+this.$route.params.id"
-                  class="btn btn-light btn-sm"
+                  class="btn btn-light btn-sm mx-3"
                 >Edit Profile</router-link>
               </div>
+              <div class="settingicon" v-if="authid==this.$route.params.id" @click="showmodel()">
+                <i class="fas fa-cog fa-2x"></i>
+              </div>
             </div>
-            <div class="d-flex">
+            <div class="d-flex my-3">
               <div>
-                <b>8</b> Posts
+                <b>{{posts.length}}</b> Posts
               </div>
               <div class="mx-4">
                 <b>8</b> Followers
@@ -45,6 +49,24 @@
       </div>
       <div class="col-md-1"></div>
     </div>
+    <!-- Model -->
+    <div
+      class="modal fade p-4"
+      id="profilemodel"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="profilemodelTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content d-block modelcontent">
+          <!-- <div class="modal-body "> -->
+          <button class="btn btn-white btn-block btn-lg border-bottom">Change Password</button>
+          <button @click="hidemodel()" class="btn btn-white btn-block btn-lg">Cancel</button>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -52,13 +74,32 @@
 export default {
   data() {
     return {
-      id: "",
+      id: " ",
+      authid: "",
+      visiteduser: " ",
       user: [],
       posts: [],
       timenow: ""
     };
   },
-
+  beforeRouteUpdate(to, from, next) {
+    this.visiteduser = to.params.id;
+    axios.get("./api/user/" + to.params.id).then(response => {
+      this.user = response.data[0];
+      this.posts = response.data[1];
+      console.log(response.data);
+    });
+    console.log("before route update mounted.");
+    next();
+  },
+  methods: {
+    showmodel() {
+      $("#profilemodel").modal("show");
+    },
+    hidemodel() {
+      $("#profilemodel").modal("hide");
+    }
+  },
   mounted() {
     axios.get("./api/user/" + this.$route.params.id).then(response => {
       this.user = response.data[0];
@@ -66,6 +107,8 @@ export default {
       console.log(response.data);
     });
     console.log("Component mounted.");
+    this.visiteduser = this.$route.params.id;
+    this.authid = $('meta[name="userid"]').attr("content");
   },
   computed: {
     username() {
@@ -74,8 +117,9 @@ export default {
       return this.id;
     }
   }
+
   // watch: {
-  //   this.timenow = moment();
+  //   mounted();
   // }
 };
 </script>
@@ -85,5 +129,12 @@ div.username {
 }
 div.bio {
   font-size: 18px;
+}
+div.settingicon:hover {
+  cursor: pointer;
+}
+div.modelcontent {
+  border: 1px solid white;
+  border-radius: 20px;
 }
 </style>

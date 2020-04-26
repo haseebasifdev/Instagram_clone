@@ -6,18 +6,13 @@
       <div class="col-md-3 border bg-white">Hello</div>
       <div class="col-md-7 border border-left-0 p-4 bg-white">
         <div class="d-flex ml-4 m-4">
-          <img
-            src="/images/download.jfif"
-            class="rounded rounded-circle prflimg"
-            width="7%"
-            height="7%"
-          />
+          <img :src="user.profile" class="rounded rounded-circle prflimg" width="7%" height="7%" />
           <div class="my-auto username d-block">
             <h4>{{user.username}}</h4>
             <div class="text-muted">{{user.name}}</div>
           </div>
         </div>
-        <button class="profilebtn">Change Profile Photo</button>
+        <button @click="showmodel()" class="profilebtn">Change Profile Photo</button>
 
         <form>
           <div class="form-group row">
@@ -93,6 +88,46 @@
 
       <div class="col-md-1"></div>
     </div>
+    <!-- Button trigger modal -->
+    <!-- <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#exampleModalCenter"
+    >Launch demo modal</button>-->
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="profilemodel"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="profilemodelTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="custom-file">
+              <input type="file" v-on:change="onFileChange" class="custom-file-input" required />
+
+              <label class="custom-file-label" for="validatedCustomFile">Choose Image to Post...</label>
+            </div>
+          </div>
+          <img :src="picture" width="50%" class="mx-auto" alt srcset />
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button @click="updateprofile()" type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -102,7 +137,7 @@ export default {
     return {
       id: "",
       user: {},
-      name: "Haseeb asif"
+      picture: ""
     };
   },
   methods: {
@@ -114,14 +149,72 @@ export default {
         email: this.user.email,
         gender: this.user.gender
       };
-      // axios.post("./api/updateprofile" + this.user.id);
+      axios
+        .post("./api/updateprofile/" + this.user.id, data)
+        .then(response => {
+          console.log("updated");
+          Toast.fire({
+            icon: "success",
+            title: "Updated successfully"
+          });
+        })
+        .catch(error => {
+          Toast.fire({
+            icon: "error",
+            title: "Eroor Occure in Updated Try Again"
+          });
+          console.log(error.data);
+        });
       console.log("Updated");
+    },
+    onFileChange(e) {
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(e.target.files[0]);
+      fileReader.onload = e => {
+        this.picture = e.target.result;
+      };
+    },
+    showmodel() {
+      $("#profilemodel").modal("show");
+    },
+    updateprofile() {
+      // this.id = $('meta[name="userid"]').attr("content");
+      let data = {
+        profile: this.picture
+      };
+      axios
+        .post("./api/updatedprofilepicture/" + this.user.id, data)
+        .then(response => {
+          this.user.profile = this.picture;
+          $("#profilemodel").modal("hide");
+          // if (response.status === 422) {
+          //   this.errorInputs = res.body;
+          // } else {
+          //   alert("Unkown error!");
+          // }
+
+          // this.$router.push("/");
+          Toast.fire({
+            icon: "success",
+            title: "Profie Updated successfully"
+          });
+          console.log(response);
+        })
+        .catch(error => {
+          // this.errorInputs = error.response.data.errors;
+
+          Toast.fire({
+            icon: "error",
+            title: "Something went wrong please try again"
+          });
+          // console.log(error.response.data.errors);
+        });
     }
   },
   mounted() {
     this.id = $('meta[name="userid"]').attr("content");
     axios.get("./api/user/" + this.$route.params.id).then(response => {
-      this.user = response.data;
+      this.user = response.data[0];
       console.log(response.data);
     });
     console.log("Component mounted.");
