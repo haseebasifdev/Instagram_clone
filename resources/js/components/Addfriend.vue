@@ -67,17 +67,20 @@ export default {
         followerid: $('meta[name="userid"]').attr("content"),
         userid: following
       };
+      this.$Progress.start();
       axios
         .post("./api/follow", data)
         .then(response => {
           console.log(response.data);
           this.users.splice(index, 1);
+          this.$Progress.finish();
           Toast.fire({
             icon: "success",
             title: "Follow Successfully"
           });
         })
         .catch(error => {
+          this.$Progress.fail();
           Toast.fire({
             icon: "error",
             title: "Something went wrong please try again"
@@ -86,10 +89,12 @@ export default {
     }
   },
   mounted() {
+    this.$Progress.start();
     this.id = $('meta[name="userid"]').attr("content");
     axios.get("./api/notfollwer/" + this.id).then(response => {
       this.users = response.data;
       console.log(response.data);
+      this.$Progress.finish();
     });
     console.log("Component mounted.");
   }

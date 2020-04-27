@@ -67,11 +67,16 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-
+        // return($post);
         $comments = Comment::where('post_id', $post->id)->get();
+
         $commentsownerid = Comment::where('user_id', $post->user_id)->pluck('user_id');
         // return ($commentsownerid);
-        $commentsowner = User::where('id', '=',$commentsownerid)->get();
+        $commentsowner='';
+        if ($commentsownerid->count()>0) {
+            $commentsowner = User::where('id', '=', $commentsownerid)->get();
+        }
+        // return ($commentsowner);
         // return ($commentsowner); 
         $owner = User::where('id', $post->user_id)->first();
         $likes = Like::where('post_id', $post->id)->get();

@@ -88,6 +88,7 @@ export default {
   },
   methods: {
     commentpost(postid) {
+       this.$Progress.start();
       this.id = $('meta[name="userid"]').attr("content");
       if (this.comment) {
         var data = {
@@ -105,10 +106,12 @@ export default {
             console.log(response.data);
             this.post.comments = response.data;
             // this.comment[index] = "";
+             this.$Progress.finish();
           })
           .catch(error => {
             // this.comment[index] = "";
             console.log(error.data);
+             this.$Progress.fail();
           });
         // console.log(post, index);
       }
@@ -147,19 +150,23 @@ export default {
         user_id: this.id,
         post_id: postid
       };
+       this.$Progress.start();
       axios
         .post("./api/addlike", data)
         .then(response => {
           this.post.likes = response.data[0];
           this.likes = response.data[1];
+           this.$Progress.finish();
           // this.iconcolor[index] = response.data[1];
         })
         .catch(error => {
+           this.$Progress.fail();
           console.log(error.data);
         });
     }
   },
   mounted() {
+    this.$Progress.start();
     console.log(this.$route.params.id);
     axios
       .get("./api/post/" + this.$route.params.id)
@@ -170,8 +177,10 @@ export default {
         this.user = response.data[1];
         this.likes = response.data[2];
         this.commentsuser = response.data[4];
+        this.$Progress.finish();
       })
       .catch(error => {
+        this.$Progress.fail();
         console.log(error.data);
       });
     console.log("mounted");

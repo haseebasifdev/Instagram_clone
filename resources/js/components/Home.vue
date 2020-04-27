@@ -17,17 +17,14 @@
                     alt
                     srcset
                   />
-                  {{user.name}}
+                  {{user.username}}
                 </div>
                 <!-- Post Image -->
                 <img :src="post.avatar" class width="100%" height="100%" alt srcset />
                 <!-- Post likes and comments -->
                 <div class="ml-3 mt-3">
                   <p class="card-text">
-                    <a
-                      class="iconcover"
-                      @click="likepost(post.id,index)"
-                    >
+                    <a class="iconcover" @click="likepost(post.id,index)">
                       <i :class="checklike(index)"></i>
                     </a>
                     <a class="text-dark iconcover">
@@ -41,14 +38,18 @@
                     v-if="post.likes>0"
                     class="card-subtitle text-dark like font-weight-bold"
                   >{{post.likes}} Likes</p>
+                  <div>
+                    <b>{{user.username}}</b>
+                    <small v-if="post.body">{{post.body}}</small>
+                  </div>
                   <router-link
                     v-if="post.comments>0"
                     :to="'/post/'+post.id"
                     class="card-subtitle text-muted comments mt-1 route"
                   >{{post.comments}} Comments</router-link>
-                  <div class=" mb-1">
+                  <div class="mb-1">
                     <router-link :to="'/post/'+post.id" class="text-muted mt-1 route">
-                      <small class=" text-dark">{{post.created_at | mytime}}</small>
+                      <small class="text-dark">{{post.created_at | mytime}}</small>
                     </router-link>
                   </div>
                 </div>
@@ -167,23 +168,26 @@ export default {
           post_id: postid,
           body: this.comment[index]
         };
-
+         this.$Progress.start();
         this.comment[index] = "";
         axios
           .post("./api/addcomment", data)
           .then(response => {
             console.log(response.data);
             this.posts[index].comments = response.data;
+             this.$Progress.finish();
             // this.comment[index] = "";
           })
           .catch(error => {
             // this.comment[index] = "";
             console.log(error.data);
+             this.$Progress.fail();
           });
         // console.log(post, index);
       }
     },
     likepost(postid, index) {
+       this.$Progress.start();
       this.id = $('meta[name="userid"]').attr("content");
       var data = {
         user_id: $('meta[name="userid"]').attr("content"),
@@ -194,21 +198,30 @@ export default {
         .then(response => {
           this.posts[index].likes = response.data[0];
           this.likes = response.data[1];
+           this.$Progress.finish();
         })
         .catch(error => {
+           this.$Progress.fail();
           console.log(error.data);
         });
     }
   },
   mounted() {
+    this.$Progress.start();
     this.id = $('meta[name="userid"]').attr("content");
-    axios.get("./api/user/" + this.id).then(response => {
-      this.user = response.data[0];
-      this.posts = response.data[1];
-      this.notfollower = response.data[2];
-      this.likes = response.data[3];
-      console.log(response.data);
-    });
+    axios
+      .get("./api/user/" + this.id)
+      .then(response => {
+        this.user = response.data[0];
+        this.posts = response.data[1];
+        this.notfollower = response.data[2];
+        this.likes = response.data[3];
+        console.log(response.data);
+        this.$Progress.finish();
+      })
+      .catch(error => {
+        this.$Progress.fail();
+      });
     // axios.get("./api/allpost/").then(response => {
     //   this.posts = response.data;
     //   console.log(response.data);

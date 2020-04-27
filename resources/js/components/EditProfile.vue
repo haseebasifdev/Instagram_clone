@@ -212,11 +212,18 @@ export default {
     }
   },
   mounted() {
+    this.$Progress.start();
     this.id = $('meta[name="userid"]').attr("content");
-    axios.get("./api/user/" + this.$route.params.id).then(response => {
-      this.user = response.data[0];
-      console.log(response.data);
-    });
+    axios
+      .get("./api/user/" + this.$route.params.id)
+      .then(response => {
+        this.user = response.data[0];
+        console.log(response.data);
+        this.$Progress.finish();
+      })
+      .catch(error => {
+        this.$Progress.fail();
+      });
     console.log("Component mounted.");
   }
 };

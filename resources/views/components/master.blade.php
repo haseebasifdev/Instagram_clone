@@ -28,14 +28,19 @@
             padding-left: 15%;
             padding-right: 15%;
         }
+
+        .router-link-exact-active {
+            color: black;
+        }
     </style>
 </head>
 
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-lg bg-white sticky-top  border-bottom p-1 ">
-            <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -62,9 +67,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="far fa-compass fa-lg"></i></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="far fa-heart fa-lg"></i></a>
-                    </li>
+                    <notification :unread="{{auth()->user()->unreadNotifications()}}"></notification>
+
                     <li class="nav-item">
                         <router-link class="nav-link" to="/addpost"><i class="fas fa-plus-circle"></i>
                         </router-link>
@@ -93,6 +97,7 @@
             {{$slot}}
         </div>
         <router-view></router-view>
+        <vue-progress-bar></vue-progress-bar>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">

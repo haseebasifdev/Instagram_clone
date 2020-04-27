@@ -62,10 +62,10 @@ class FollowerController extends Controller
         $friends1 = Follower::where('user_id', $user->id)->pluck('follower_id');
         $friends2 = Follower::where('follower_id', $user->id)->pluck('user_id');
         $friends2->push($user->id);
-        if ($friends1->count() > 0) {
+        // if ($friends1->count() > 0) {
 
-            $friends2 = array_merge($friends2, $friends1);
-        }
+        //     $friends2 = array_merge($friends2, $friends1);
+        // }
         $notFolloew =  User::whereNotIn('id', $friends2)->get();
 
         return ($notFolloew);

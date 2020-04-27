@@ -102,6 +102,7 @@ export default {
     };
   },
   beforeRouteUpdate(to, from, next) {
+    this.$Progress.start();
     this.visiteduser = to.params.id;
     axios.get("./api/user/" + to.params.id).then(response => {
       this.user = response.data[0];
@@ -109,6 +110,7 @@ export default {
       this.followersid = response.data[4];
       this.followingid = response.data[5];
       console.log(response.data);
+      this.$Progress.finish();
     });
     console.log("Component mounted.");
     console.log("before route update mounted.");
@@ -126,13 +128,20 @@ export default {
     }
   },
   mounted() {
-    axios.get("./api/user/" + this.$route.params.id).then(response => {
-      this.user = response.data[0];
-      this.posts = response.data[1];
-      this.followersid = response.data[4];
-      this.followingid = response.data[5];
-      console.log(response.data);
-    });
+    this.$Progress.start();
+    axios
+      .get("./api/user/" + this.$route.params.id)
+      .then(response => {
+        this.user = response.data[0];
+        this.posts = response.data[1];
+        this.followersid = response.data[4];
+        this.followingid = response.data[5];
+        this.$Progress.finish();
+        console.log(response.data);
+      })
+      .catch(error => {
+        this.$Progress.fail();
+      });
     console.log("Component mounted.");
     this.visiteduser = this.$route.params.id;
     this.authid = $('meta[name="userid"]').attr("content");

@@ -45,4 +45,8 @@ class User extends Authenticatable
         }
         // return (asset($value ? 'images/' . $value  : 'images/download.jfif'));
     }
+    public function unreadNotifications()
+    {
+        return Notification::where('to', auth()->user()->id)->where('read', false)->get();
+    }
 }

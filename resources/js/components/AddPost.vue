@@ -26,7 +26,7 @@
         </form>
       </div>
       <div class="col-md-4 sidecard">
-        <img :src="picture" width="100%" class=" img-fluid img-thumbnail" />
+        <img :src="picture" width="100%" class="img-fluid img-thumbnail" />
       </div>
     </div>
   </div>
@@ -55,6 +55,7 @@ export default {
       this.picture = event.target.files[0];
     },
     savepost() {
+      this.$Progress.start();
       this.id = $('meta[name="userid"]').attr("content");
       let data = {
         body: this.body,
@@ -69,16 +70,18 @@ export default {
           // } else {
           //   alert("Unkown error!");
           // }
-
+           this.$Progress.finish();
           this.$router.push("/");
 
           Toast.fire({
             icon: "success",
             title: "Posted successfully"
           });
+
           console.log(response);
         })
         .catch(error => {
+           this.$Progress.fail();
           this.errorInputs = error.response.data.errors;
 
           Toast.fire({
@@ -90,11 +93,18 @@ export default {
     }
   },
   mounted() {
+    this.$Progress.start();
     this.id = $('meta[name="userid"]').attr("content");
-    axios.get("./api/user/" + this.id).then(response => {
-      this.user = response.data[0];
-      console.log(response.data);
-    });
+    axios
+      .get("./api/user/" + this.id)
+      .then(response => {
+        this.user = response.data[0];
+        console.log(response.data);
+        this.$Progress.finish();
+      })
+      .catch(error => {
+        this.$Progress.fail();
+      });
     console.log("Component mounted.");
   }
 };

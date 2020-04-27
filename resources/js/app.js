@@ -26,13 +26,20 @@ window.Toast = Swal.mixin({
     }
 })
 
+import VueProgressBar from 'vue-progressbar'
 
+Vue.use(VueProgressBar, {
+  color: 'rgb(0, 0, 255)',
+  failedColor: 'red',
+  height: '1000px'
+})
 import Profile from './components/Profile.vue'
 import Home from './components/Home.vue'
 import AddFriends from './components/Addfriend.vue'
 import AddPost from './components/AddPost.vue'
 import EditProfile from './components/EditProfile.vue'
 import PostShow from './components/ShowPost.vue'
+import Notification from './components/Notification.vue'
 const Bar = {
     template: '<div>Haseeb</div>'
 }
@@ -64,7 +71,7 @@ const routes = [{
     },
 ]
 const router = new VueRouter({
-   
+
     routes // short for `routes: routes`
 })
 Vue.filter('mytime', function (created) {
@@ -86,6 +93,7 @@ Vue.filter('mytime', function (created) {
 // Vue.component('home', require('./components/ExampleComponent.vue').default);
 Vue.component('home', Home);
 Vue.component('post', AddPost);
+Vue.component('notification', Notification);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
