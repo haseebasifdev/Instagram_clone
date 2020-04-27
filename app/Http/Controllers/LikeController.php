@@ -40,7 +40,9 @@ class LikeController extends Controller
         $post = Post::find($request->post_id);
         if ($like->exists()) {
             $like->delete();
-            $post->likes = $post->likes - 1;
+
+            $post->likes = Like::where('post_id', $post->id)->count();
+            // $post->likes = $post->likes - 1;
             $post->save();
             $postliked = Like::where('user_id', $request->user_id)->get();
             return ([$post->likes, $postliked]);
@@ -49,7 +51,8 @@ class LikeController extends Controller
                 'user_id' => $request->user_id,
                 'post_id' => $request->post_id,
             ]);
-            $post->likes = $post->likes + 1;
+            $post->likes = Like::where('post_id', $post->id)->count();
+            // $post->likes = $post->likes + 1;
             $post->save();
             $postliked = Like::where('user_id', $request->user_id)->get();
             return ([$post->likes, $postliked]);

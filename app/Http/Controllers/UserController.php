@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Post;
 use App\Like;
+use App\Follower;
 use Illuminate\Http\Request;
 
 use Illuminate\Validation\Rule;
@@ -51,10 +52,17 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $friends1 = Follower::where('user_id', $user->id)->pluck('follower_id');
+        $friends2 = Follower::where('follower_id', $user->id)->pluck('user_id');
+        $friends2->push($user->id);
+        if ($friends1->count() > 0) {
+
+            $friends2 = array_merge($friends2, $friends1);
+        }
         $postlikes = Like::where('user_id', $user->id)->get();
-        $notFolloew = User::where('id', '!=', $user->id)->get();
-        $post = Post::where('user_id', $user->id)->get();
-        return [$user, $post, $notFolloew, $postlikes];
+        $notFolloew =  User::whereNotIn('id', $friends2)->get();
+        $post = Post::where('user_id', $user->id)->latest()->get();
+        return [$user, $post, $notFolloew, $postlikes, $friends1, $friends2];
     }
 
     /**

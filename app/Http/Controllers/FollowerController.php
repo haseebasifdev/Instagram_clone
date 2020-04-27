@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Follower;
+use App\User;
 use Illuminate\Http\Request;
 
 class FollowerController extends Controller
@@ -35,7 +36,19 @@ class FollowerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $checkfollower = Follower::where('user_id', $request->userid)->where('follower_id', $request->followerid);
+        if ($checkfollower->exists()) {
+            $checkfollower->delete();
+        } else {
+
+            Follower::create([
+                'user_id' => $request->userid,
+                'follower_id' => $request->followerid
+            ]);
+        };
+        $following = Follower::where('user_id', $request->followerid)->get();
+        $follower = Follower::where('follower_id', $request->followerid)->get();
+        return ([$following, $follower]);
     }
 
     /**
@@ -44,9 +57,18 @@ class FollowerController extends Controller
      * @param  \App\Follower  $follower
      * @return \Illuminate\Http\Response
      */
-    public function show(Follower $follower)
+    public function show(User $user)
     {
-        //
+        $friends1 = Follower::where('user_id', $user->id)->pluck('follower_id');
+        $friends2 = Follower::where('follower_id', $user->id)->pluck('user_id');
+        $friends2->push($user->id);
+        if ($friends1->count() > 0) {
+
+            $friends2 = array_merge($friends2, $friends1);
+        }
+        $notFolloew =  User::whereNotIn('id', $friends2)->get();
+
+        return ($notFolloew);
     }
 
     /**

@@ -20,14 +20,13 @@
                   {{user.name}}
                 </div>
                 <!-- Post Image -->
-                <img :src="post.avatar" class width="100%" height="600px" alt srcset />
+                <img :src="post.avatar" class width="100%" height="100%" alt srcset />
                 <!-- Post likes and comments -->
                 <div class="ml-3 mt-3">
                   <p class="card-text">
                     <a
                       class="iconcover"
                       @click="likepost(post.id,index)"
-                      :class="' '+iconcolor[index]"
                     >
                       <i :class="checklike(index)"></i>
                     </a>
@@ -45,9 +44,13 @@
                   <router-link
                     v-if="post.comments>0"
                     :to="'/post/'+post.id"
-                    class="card-subtitle text-muted comments mt-1"
-                  >{{post.comments}} Comment</router-link>
-                  <p class="text-muted mt-1">{{post.created_at | mytime}}</p>
+                    class="card-subtitle text-muted comments mt-1 route"
+                  >{{post.comments}} Comments</router-link>
+                  <div class=" mb-1">
+                    <router-link :to="'/post/'+post.id" class="text-muted mt-1 route">
+                      <small class=" text-dark">{{post.created_at | mytime}}</small>
+                    </router-link>
+                  </div>
                 </div>
                 <div class="d-flex py-2 border-top">
                   <input
@@ -86,14 +89,17 @@
               </div>
             </div>
             <div class="crd position-fixed">
-              <div class="justify-content-between">
-                <div class="text-muted font-weight-bold" style="font-size:0.8rem">
-                  Suggesions For you
-                  <router-link to="/addfriends" class="route ml-4">See all</router-link>
+              <div class>
+                <div
+                  class="text-muted font-weight-bold justify-content-between"
+                  style="font-size:0.8rem"
+                >
+                  <span>Suggesions For you</span>
+                  <router-link to="/addfriends" class="route float-right mr-2">See all</router-link>
                 </div>
               </div>
-              <div v-for="notflw in notfollower" class=" sidecard">
-                <div class="">
+              <div v-for="notflw in notfollower" class="sidecard">
+                <div class>
                   <div class="d-flex justify-content-between">
                     <div class="d-flex ml-1">
                       <img
@@ -140,18 +146,6 @@ export default {
   },
   methods: {
     checklike(index) {
-      // this.likes.every(element => {
-      //   if (element.post_id == this.posts[index].id) {
-      //     console.log("in Loop");
-      //     console.log(element.post_id, this.posts[index].id);
-      //     return "fas fa-heart iconsize text-danger";
-      //     // return true
-      //     // break;
-      //   }
-      // });
-      // console.log("out loop");
-      // return "far fa-heart iconsize";
-      // // return false;
       for (let like of this.likes) {
         if (like.post_id == this.posts[index].id) {
           // console.log("in Loop");

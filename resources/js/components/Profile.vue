@@ -25,11 +25,11 @@
               <div>
                 <b>{{posts.length}}</b> Posts
               </div>
-              <div class="mx-4">
-                <b>8</b> Followers
+              <div @click="follower()" class="mx-4 follow">
+                <b>{{followersid.length}}</b> Followers
               </div>
-              <div>
-                <b>8</b> Following
+              <div class="follow">
+                <b>{{followingid.length}}</b> Following
               </div>
             </div>
             <div class="my-3">
@@ -67,6 +67,24 @@
         </div>
       </div>
     </div>
+    <!--Follower Model -->
+    <div
+      class="modal fade p-4"
+      id="follower"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="followerTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content d-block modelcontent">
+          <!-- <div class="modal-body "> -->
+          <button class="btn btn-white btn-block btn-lg border-bottom">Change Password</button>
+          <button @click="hidemodel()" class="btn btn-white btn-block btn-lg">Cancel</button>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -79,7 +97,8 @@ export default {
       visiteduser: " ",
       user: [],
       posts: [],
-      timenow: ""
+      followersid: "",
+      followingid: ""
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -87,12 +106,18 @@ export default {
     axios.get("./api/user/" + to.params.id).then(response => {
       this.user = response.data[0];
       this.posts = response.data[1];
+      this.followersid = response.data[4];
+      this.followingid = response.data[5];
       console.log(response.data);
     });
+    console.log("Component mounted.");
     console.log("before route update mounted.");
     next();
   },
   methods: {
+    follower() {
+      $("#follower").modal("show");
+    },
     showmodel() {
       $("#profilemodel").modal("show");
     },
@@ -104,6 +129,8 @@ export default {
     axios.get("./api/user/" + this.$route.params.id).then(response => {
       this.user = response.data[0];
       this.posts = response.data[1];
+      this.followersid = response.data[4];
+      this.followingid = response.data[5];
       console.log(response.data);
     });
     console.log("Component mounted.");
@@ -136,5 +163,8 @@ div.settingicon:hover {
 div.modelcontent {
   border: 1px solid white;
   border-radius: 20px;
+}
+div.follow {
+  cursor: pointer;
 }
 </style>

@@ -2071,6 +2071,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2078,12 +2081,37 @@ __webpack_require__.r(__webpack_exports__);
       users: []
     };
   },
+  methods: {
+    following: function following(_following, index) {
+      var _this = this;
+
+      var data = {
+        followerid: $('meta[name="userid"]').attr("content"),
+        userid: _following
+      };
+      axios.post("./api/follow", data).then(function (response) {
+        console.log(response.data);
+
+        _this.users.splice(index, 1);
+
+        Toast.fire({
+          icon: "success",
+          title: "Follow Successfully"
+        });
+      })["catch"](function (error) {
+        Toast.fire({
+          icon: "error",
+          title: "Something went wrong please try again"
+        });
+      });
+    }
+  },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     this.id = $('meta[name="userid"]').attr("content");
-    axios.get("./api/alluser/" + this.id).then(function (response) {
-      _this.users = response.data;
+    axios.get("./api/notfollwer/" + this.id).then(function (response) {
+      _this2.users = response.data;
       console.log(response.data);
     });
     console.log("Component mounted.");
@@ -2465,6 +2493,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2479,18 +2513,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   },
   methods: {
     checklike: function checklike(index) {
-      // this.likes.every(element => {
-      //   if (element.post_id == this.posts[index].id) {
-      //     console.log("in Loop");
-      //     console.log(element.post_id, this.posts[index].id);
-      //     return "fas fa-heart iconsize text-danger";
-      //     // return true
-      //     // break;
-      //   }
-      // });
-      // console.log("out loop");
-      // return "far fa-heart iconsize";
-      // // return false;
       var _iterator = _createForOfIteratorHelper(this.likes),
           _step;
 
@@ -2664,6 +2686,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2672,7 +2712,8 @@ __webpack_require__.r(__webpack_exports__);
       visiteduser: " ",
       user: [],
       posts: [],
-      timenow: ""
+      followersid: "",
+      followingid: ""
     };
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -2682,12 +2723,18 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("./api/user/" + to.params.id).then(function (response) {
       _this.user = response.data[0];
       _this.posts = response.data[1];
+      _this.followersid = response.data[4];
+      _this.followingid = response.data[5];
       console.log(response.data);
     });
+    console.log("Component mounted.");
     console.log("before route update mounted.");
     next();
   },
   methods: {
+    follower: function follower() {
+      $("#follower").modal("show");
+    },
     showmodel: function showmodel() {
       $("#profilemodel").modal("show");
     },
@@ -2701,6 +2748,8 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("./api/user/" + this.$route.params.id).then(function (response) {
       _this2.user = response.data[0];
       _this2.posts = response.data[1];
+      _this2.followersid = response.data[4];
+      _this2.followingid = response.data[5];
       console.log(response.data);
     });
     console.log("Component mounted.");
@@ -2730,6 +2779,71 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2753,10 +2867,77 @@ __webpack_require__.r(__webpack_exports__);
       profile: [],
       post: [],
       comments: [],
+      commentsuser: [],
+      comment: "",
       likes: ""
     };
   },
   methods: {
+    commentpost: function commentpost(postid) {
+      var _this = this;
+
+      this.id = $('meta[name="userid"]').attr("content");
+
+      if (this.comment) {
+        var data = {
+          user_id: this.id,
+          post_id: postid,
+          body: this.comment
+        };
+        this.comments.push(data);
+        this.commentsuser.push(this.user);
+        this.comment = "";
+        axios.post("./api/addcomment", data).then(function (response) {
+          console.log(response.data);
+          _this.post.comments = response.data; // this.comment[index] = "";
+        })["catch"](function (error) {
+          // this.comment[index] = "";
+          console.log(error.data);
+        }); // console.log(post, index);
+      }
+    },
+    checklike: function checklike() {
+      var _iterator = _createForOfIteratorHelper(this.likes),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var like = _step.value;
+
+          if (like.post_id == this.post.id) {
+            // console.log("in Loop");
+            console.log(like.post_id, this.post.id);
+            return "fas fa-heart iconsize text-danger";
+            break;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      return "far fa-heart iconsize";
+    },
+    finduser: function finduser(id) {
+      var _iterator2 = _createForOfIteratorHelper(this.commentsuser),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var user = _step2.value;
+
+          if (id == user.id) {
+            return user;
+            break;
+          }
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    },
     route: function route() {
       return "/profiles/" + this.id;
     },
@@ -2764,8 +2945,8 @@ __webpack_require__.r(__webpack_exports__);
       this.id = $('meta[name="userid"]').attr("content");
       this.comment[index] = ""; // console.log(post, index);
     },
-    likepost: function likepost(postid, index) {
-      var _this = this;
+    likepost: function likepost(postid) {
+      var _this2 = this;
 
       this.id = $('meta[name="userid"]').attr("content");
       var data = {
@@ -2773,23 +2954,24 @@ __webpack_require__.r(__webpack_exports__);
         post_id: postid
       };
       axios.post("./api/addlike", data).then(function (response) {
-        _this.posts[index].likes = response.data[0];
-        _this.iconcolor[index] = response.data[1];
+        _this2.post.likes = response.data[0];
+        _this2.likes = response.data[1]; // this.iconcolor[index] = response.data[1];
       })["catch"](function (error) {
         console.log(error.data);
       });
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     console.log(this.$route.params.id);
     axios.get("./api/post/" + this.$route.params.id).then(function (response) {
       console.log(response.data);
-      _this2.comments = response.data[0];
-      _this2.user = response.data[1];
-      _this2.profile = response.data[2];
-      _this2.likes = response.data[3];
+      _this3.post = response.data[3];
+      _this3.comments = response.data[0];
+      _this3.user = response.data[1];
+      _this3.likes = response.data[2];
+      _this3.commentsuser = response.data[4];
     })["catch"](function (error) {
       console.log(error.data);
     });
@@ -7371,7 +7553,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-4f661924] {\n  font-size: 30px;\n}\ndiv.bio[data-v-4f661924] {\n  font-size: 18px;\n}\n.friendlist[data-v-4f661924] {\n  margin-left: 65%;\n}\n.route[data-v-4f661924]:hover {\n  text-decoration: none;\n}\ndiv.sidecard[data-v-4f661924] {\n  margin-top: 10%;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-4f661924] {\n  font-size: 30px;\n}\ndiv.bio[data-v-4f661924] {\n  font-size: 18px;\n}\n.friendlist[data-v-4f661924] {\n  margin-left: 65%;\n}\n.route[data-v-4f661924]:hover {\n  text-decoration: none;\n}\ndiv.sidecard[data-v-4f661924] {\n  margin-top: 8%;\n}\ndiv.card[data-v-4f661924] {\n  margin-left: 7.5%;\n  width: 82.6%;\n}\n", ""]);
 
 // exports
 
@@ -7428,7 +7610,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-3bd692e4] {\n  font-size: 30px;\n}\ndiv.bio[data-v-3bd692e4] {\n  font-size: 18px;\n}\ndiv.settingicon[data-v-3bd692e4]:hover {\n  cursor: pointer;\n}\ndiv.modelcontent[data-v-3bd692e4] {\n  border: 1px solid white;\n  border-radius: 20px;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-3bd692e4] {\n  font-size: 30px;\n}\ndiv.bio[data-v-3bd692e4] {\n  font-size: 18px;\n}\ndiv.settingicon[data-v-3bd692e4]:hover {\n  cursor: pointer;\n}\ndiv.modelcontent[data-v-3bd692e4] {\n  border: 1px solid white;\n  border-radius: 20px;\n}\ndiv.follow[data-v-3bd692e4] {\n  cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -7447,7 +7629,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ndiv.username[data-v-14865028] {\n  font-size: 30px;\n}\ndiv.bio[data-v-14865028] {\n  font-size: 18px;\n}\ndiv.container[data-v-14865028] {\n  margin-top: 2%;\n}\n", ""]);
+exports.push([module.i, "\ndiv.username[data-v-14865028] {\n  font-size: 30px;\n}\ndiv.bio[data-v-14865028] {\n  font-size: 18px;\n}\ndiv.container[data-v-14865028] {\n  margin-top: 2%;\n}\n.iconsize[data-v-14865028] {\n  font-size: 1.5rem;\n}\ninput[data-v-14865028]:focus {\n  box-shadow: none;\n}\n.iconcover[data-v-14865028]:hover {\n  cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -60179,44 +60361,47 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "crd" },
-            _vm._l(_vm.users, function(user) {
-              return _c("div", { staticClass: "card border" }, [
-                _c("div", { staticClass: "card-body" }, [
-                  _c("div", { staticClass: "d-flex justify-content-between" }, [
-                    _c("div", { staticClass: " d-flex" }, [
-                      _c("img", {
-                        staticClass: "rounded rounded-circle",
-                        attrs: { src: user.profile, width: "8%" }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: " ml-2 my-auto" },
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "font-weight-bold text-dark route",
-                              attrs: { to: "/profiles/" + user.id }
-                            },
-                            [_vm._v(_vm._s(user.username))]
-                          ),
-                          _vm._v(" "),
-                          _c("div", [_vm._v(_vm._s(user.name))])
-                        ],
-                        1
-                      )
-                    ]),
+            { staticClass: "card container border-0 my-1" },
+            _vm._l(_vm.users, function(user, index) {
+              return _c("div", { staticClass: "py-2" }, [
+                _c("div", { staticClass: "d-flex justify-content-between" }, [
+                  _c("div", { staticClass: "d-flex" }, [
+                    _c("img", {
+                      staticClass: "rounded rounded-circle",
+                      attrs: { src: user.profile, width: "6%", height: "90%" }
+                    }),
                     _vm._v(" "),
                     _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary btn-sm my-auto btnfollow"
-                      },
-                      [_vm._v("Follow")]
+                      "div",
+                      { staticClass: "ml-2 my-auto" },
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "font-weight-bold text-dark route",
+                            attrs: { to: "/profiles/" + user.id }
+                          },
+                          [_vm._v(_vm._s(user.username))]
+                        ),
+                        _vm._v(" "),
+                        _c("div", [_vm._v(_vm._s(user.name))])
+                      ],
+                      1
                     )
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-sm my-auto btnfollow",
+                      on: {
+                        click: function($event) {
+                          return _vm.following(user.id, index)
+                        }
+                      }
+                    },
+                    [_vm._v("Follow")]
+                  )
                 ])
               ])
             }),
@@ -60234,7 +60419,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("h6", { staticClass: "ml-2" }, [_c("b", [_vm._v("Suggested")])])
+    return _c(
+      "div",
+      { staticClass: "text-muted", staticStyle: { "margin-left": "9%" } },
+      [_c("b", [_vm._v("Suggested")])]
+    )
   }
 ]
 render._withStripped = true
@@ -60707,7 +60896,7 @@ var render = function() {
                         attrs: {
                           src: post.avatar,
                           width: "100%",
-                          height: "600px",
+                          height: "100%",
                           alt: "",
                           srcset: ""
                         }
@@ -60722,7 +60911,6 @@ var render = function() {
                               "a",
                               {
                                 staticClass: "iconcover",
-                                class: " " + _vm.iconcolor[index],
                                 on: {
                                   click: function($event) {
                                     return _vm.likepost(post.id, index)
@@ -60753,16 +60941,34 @@ var render = function() {
                                 "router-link",
                                 {
                                   staticClass:
-                                    "card-subtitle text-muted comments mt-1",
+                                    "card-subtitle text-muted comments mt-1 route",
                                   attrs: { to: "/post/" + post.id }
                                 },
-                                [_vm._v(_vm._s(post.comments) + " Comment")]
+                                [_vm._v(_vm._s(post.comments) + " Comments")]
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          _c("p", { staticClass: "text-muted mt-1" }, [
-                            _vm._v(_vm._s(_vm._f("mytime")(post.created_at)))
-                          ])
+                          _c(
+                            "div",
+                            { staticClass: " mb-1" },
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  staticClass: "text-muted mt-1 route",
+                                  attrs: { to: "/post/" + post.id }
+                                },
+                                [
+                                  _c("small", { staticClass: " text-dark" }, [
+                                    _vm._v(
+                                      _vm._s(_vm._f("mytime")(post.created_at))
+                                    )
+                                  ])
+                                ]
+                              )
+                            ],
+                            1
+                          )
                         ],
                         1
                       ),
@@ -60868,21 +61074,21 @@ var render = function() {
               "div",
               { staticClass: "crd position-fixed" },
               [
-                _c("div", { staticClass: "justify-content-between" }, [
+                _c("div", {}, [
                   _c(
                     "div",
                     {
-                      staticClass: "text-muted font-weight-bold",
+                      staticClass:
+                        "text-muted font-weight-bold justify-content-between",
                       staticStyle: { "font-size": "0.8rem" }
                     },
                     [
-                      _vm._v(
-                        "\n                Suggesions For you\n                "
-                      ),
+                      _c("span", [_vm._v("Suggesions For you")]),
+                      _vm._v(" "),
                       _c(
                         "router-link",
                         {
-                          staticClass: "route ml-4",
+                          staticClass: "route float-right mr-2",
                           attrs: { to: "/addfriends" }
                         },
                         [_vm._v("See all")]
@@ -60893,7 +61099,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _vm._l(_vm.notfollower, function(notflw) {
-                  return _c("div", { staticClass: " sidecard" }, [
+                  return _c("div", { staticClass: "sidecard" }, [
                     _c("div", {}, [
                       _c(
                         "div",
@@ -61052,9 +61258,26 @@ var render = function() {
                 _vm._v(" Posts\n            ")
               ]),
               _vm._v(" "),
-              _vm._m(0),
+              _c(
+                "div",
+                {
+                  staticClass: "mx-4 follow",
+                  on: {
+                    click: function($event) {
+                      return _vm.follower()
+                    }
+                  }
+                },
+                [
+                  _c("b", [_vm._v(_vm._s(_vm.followersid.length))]),
+                  _vm._v(" Followers\n            ")
+                ]
+              ),
               _vm._v(" "),
-              _vm._m(1)
+              _c("div", { staticClass: "follow" }, [
+                _c("b", [_vm._v(_vm._s(_vm.followingid.length))]),
+                _vm._v(" Following\n            ")
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "my-3" }, [
@@ -61131,29 +61354,55 @@ var render = function() {
           ]
         )
       ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade p-4",
+        attrs: {
+          id: "follower",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "followerTitle",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content d-block modelcontent" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-white btn-block btn-lg border-bottom" },
+                [_vm._v("Change Password")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-white btn-block btn-lg",
+                  on: {
+                    click: function($event) {
+                      return _vm.hidemodel()
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              )
+            ])
+          ]
+        )
+      ]
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mx-4" }, [
-      _c("b", [_vm._v("8")]),
-      _vm._v(" Followers\n            ")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("b", [_vm._v("8")]),
-      _vm._v(" Following\n            ")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -61175,35 +61424,181 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container mt-0" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-1 p-0" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-10 p-0" }, [
+        _c("div", { staticClass: "row container" }, [
+          _c("div", { staticClass: "col-md-7 p-0 m-0" }, [
+            _c("img", {
+              attrs: {
+                src: _vm.post.avatar,
+                width: "100%",
+                height: "100%",
+                alt: "",
+                srcset: ""
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-5 p-0 m-0 bg-white border" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "card-title font-weight-bold p-3 my-auto border-bottom"
+              },
+              [
+                _c("img", {
+                  staticClass: "mr-2 rounded rounded-circle",
+                  attrs: {
+                    src: _vm.user.profile,
+                    width: "10%",
+                    height: "10%",
+                    alt: "",
+                    srcset: ""
+                  }
+                }),
+                _vm._v(
+                  "\n            " + _vm._s(_vm.user.name) + "\n          "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "border-bottom overflow-scroll",
+                staticStyle: { height: "300px" }
+              },
+              _vm._l(_vm.comments, function(cmnt) {
+                return _c("div", { staticClass: "my-2 ml-2" }, [
+                  _c("img", {
+                    staticClass: "rounded rounded-circle my-auto",
+                    attrs: {
+                      src: _vm.finduser(cmnt.user_id).profile,
+                      width: "10%",
+                      height: "65%"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "font-weight-bold mx-1" }, [
+                    _vm._v(_vm._s(_vm.finduser(cmnt.user_id).name))
+                  ]),
+                  _vm._v(" "),
+                  _c("small", [_vm._v(_vm._s(cmnt.body))])
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "ml-3 mt-3 bottom" }, [
+              _c("p", { staticClass: "card-text" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "iconcover",
+                    on: {
+                      click: function($event) {
+                        return _vm.likepost(_vm.post.id)
+                      }
+                    }
+                  },
+                  [_c("i", { class: _vm.checklike() })]
+                ),
+                _vm._v(" "),
+                _vm._m(0),
+                _vm._v(" "),
+                _vm._m(1)
+              ]),
+              _vm._v(" "),
+              _vm.post.likes > 0
+                ? _c(
+                    "p",
+                    {
+                      staticClass:
+                        "card-subtitle text-dark like font-weight-bold"
+                    },
+                    [_vm._v(_vm._s(_vm.post.likes) + " Likes")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("p", { staticClass: "text-muted mt-1" }, [
+                _vm._v(_vm._s(_vm._f("mytime")(_vm.post.created_at)))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "d-flex py-2 border-top" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.comment,
+                    expression: "comment"
+                  }
+                ],
+                staticClass: "form-control border-0 hover",
+                attrs: { type: "text", placeholder: "Add a Comment..." },
+                domProps: { value: _vm.comment },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.commentpost(_vm.post.id)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.comment = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.comment
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn text-primary font-weight-bold",
+                      on: {
+                        click: function($event) {
+                          return _vm.commentpost(_vm.post.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Post")]
+                  )
+                : _vm._e()
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-1 p-0" })
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container mt-0" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-1 p-0" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-10 p-0" }, [
-          _c("div", { staticClass: "row container" }, [
-            _c("div", { staticClass: "col-md-8 p-0 m-0" }, [
-              _vm._v(
-                "Lorem, ipsum dolor sit Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi amet voluptatibus quis, ad quasi quia aspernatur inventore quaerat repellendus error quibusdam eius, sed impedit autem alias dolorem vero maxime, accusamus fugiat perspiciatis delectus laboriosam repellat labore totam. Enim ipsum architecto aspernatur repellendus magnam ut facilis vitae officia. Molestiae non provident perspiciatis, sint officiis quia dignissimos ducimus at eum recusandae numquam illo corrupti nisi nostrum dolorum praesentium quidem nulla, repellat sunt, nesciunt veritatis minima. Aliquid adipisci fugit perferendis tenetur non maiores est atque soluta, qui officia repellendus corrupti optio, maxime a ipsum unde eos? Itaque esse accusamus voluptatem repellendus deserunt fuga? amet consectetur adipisicing elit. Animi ea nobis ut natus praesentium omnis eius. Velit atque doloribus necessitatibus voluptas ad maxime sapiente quam iusto numquam! Ipsam, similique aspernatur voluptatibus quod quae numquam architecto accusantium repudiandae eius assumenda recusandae dolores sapiente ad dolor, odio molestiae id nam. Voluptatum, repudiandae?"
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-4 p-0 m-0" }, [
-              _vm._v(
-                "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa sequi eos quam magnam ratione ipsam dicta natus, quaerat sapiente vero quibusdam possimus voluptas perferendis, amet distinctio. Saepe, ipsum dicta? Laboriosam delectus pariatur molestiae impedit eum similique ipsa voluptatem doloribus, accusantium aperiam illum totam, architecto neque tempore! Molestias eos molestiae voluptates!"
-              )
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-1 p-0" })
-      ])
+    return _c("a", { staticClass: "text-dark iconcover" }, [
+      _c("i", { staticClass: "far fa-comment iconsize mx-2" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "text-primary iconcover" }, [
+      _c("i", { staticClass: "fas fa-location-arrow iconsize" })
     ])
   }
 ]

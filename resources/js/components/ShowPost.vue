@@ -4,8 +4,67 @@
       <div class="col-md-1 p-0"></div>
       <div class="col-md-10 p-0">
         <div class="row container">
-          <div class="col-md-8 p-0 m-0">Lorem, ipsum dolor sit Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi amet voluptatibus quis, ad quasi quia aspernatur inventore quaerat repellendus error quibusdam eius, sed impedit autem alias dolorem vero maxime, accusamus fugiat perspiciatis delectus laboriosam repellat labore totam. Enim ipsum architecto aspernatur repellendus magnam ut facilis vitae officia. Molestiae non provident perspiciatis, sint officiis quia dignissimos ducimus at eum recusandae numquam illo corrupti nisi nostrum dolorum praesentium quidem nulla, repellat sunt, nesciunt veritatis minima. Aliquid adipisci fugit perferendis tenetur non maiores est atque soluta, qui officia repellendus corrupti optio, maxime a ipsum unde eos? Itaque esse accusamus voluptatem repellendus deserunt fuga? amet consectetur adipisicing elit. Animi ea nobis ut natus praesentium omnis eius. Velit atque doloribus necessitatibus voluptas ad maxime sapiente quam iusto numquam! Ipsam, similique aspernatur voluptatibus quod quae numquam architecto accusantium repudiandae eius assumenda recusandae dolores sapiente ad dolor, odio molestiae id nam. Voluptatum, repudiandae?</div>
-          <div class="col-md-4 p-0 m-0">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa sequi eos quam magnam ratione ipsam dicta natus, quaerat sapiente vero quibusdam possimus voluptas perferendis, amet distinctio. Saepe, ipsum dicta? Laboriosam delectus pariatur molestiae impedit eum similique ipsa voluptatem doloribus, accusantium aperiam illum totam, architecto neque tempore! Molestias eos molestiae voluptates!</div>
+          <div class="col-md-7 p-0 m-0">
+            <img :src="post.avatar" class width="100%" height="100%" alt srcset />
+          </div>
+          <div class="col-md-5 p-0 m-0 bg-white border">
+            <div class="card-title font-weight-bold p-3 my-auto border-bottom">
+              <img
+                :src="user.profile"
+                class="mr-2 rounded rounded-circle"
+                width="10%"
+                height="10%"
+                alt
+                srcset
+              />
+              {{user.name}}
+            </div>
+            <div class="border-bottom overflow-scroll" style="height:300px">
+              <div v-for="cmnt in comments" class="my-2 ml-2">
+                <img
+                  :src="(finduser(cmnt.user_id)).profile"
+                  class="rounded rounded-circle my-auto"
+                  width="10%"
+                  height="65%"
+                />
+                <span class="font-weight-bold mx-1">{{finduser(cmnt.user_id).name}}</span>
+                <small>{{cmnt.body}}</small>
+              </div>
+            </div>
+            <div class="ml-3 mt-3 bottom">
+              <p class="card-text">
+                <a class="iconcover" @click="likepost(post.id)">
+                  <i :class="checklike()"></i>
+                </a>
+                <a class="text-dark iconcover">
+                  <i class="far fa-comment iconsize mx-2"></i>
+                </a>
+                <a class="text-primary iconcover">
+                  <i class="fas fa-location-arrow iconsize"></i>
+                </a>
+              </p>
+
+              <p
+                v-if="post.likes>0"
+                class="card-subtitle text-dark like font-weight-bold"
+              >{{post.likes}} Likes</p>
+              <p class="text-muted mt-1">{{post.created_at | mytime}}</p>
+            </div>
+            <div class="d-flex py-2 border-top">
+              <input
+                type="text"
+                class="form-control border-0 hover"
+                placeholder="Add a Comment..."
+                v-model="comment"
+                @keyup.enter="commentpost(post.id)"
+              />
+              <button
+                v-if="comment"
+                @click="commentpost(post.id)"
+                class="btn text-primary font-weight-bold"
+              >Post</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-1 p-0"></div>
@@ -22,10 +81,57 @@ export default {
       profile: [],
       post: [],
       comments: [],
+      commentsuser: [],
+      comment: "",
       likes: ""
     };
   },
   methods: {
+    commentpost(postid) {
+      this.id = $('meta[name="userid"]').attr("content");
+      if (this.comment) {
+        var data = {
+          user_id: this.id,
+          post_id: postid,
+          body: this.comment
+        };
+
+        this.comments.push(data);
+        this.commentsuser.push(this.user);
+        this.comment = "";
+        axios
+          .post("./api/addcomment", data)
+          .then(response => {
+            console.log(response.data);
+            this.post.comments = response.data;
+            // this.comment[index] = "";
+          })
+          .catch(error => {
+            // this.comment[index] = "";
+            console.log(error.data);
+          });
+        // console.log(post, index);
+      }
+    },
+    checklike() {
+      for (let like of this.likes) {
+        if (like.post_id == this.post.id) {
+          // console.log("in Loop");
+          console.log(like.post_id, this.post.id);
+          return "fas fa-heart iconsize text-danger";
+          break;
+        }
+      }
+      return "far fa-heart iconsize";
+    },
+    finduser(id) {
+      for (let user of this.commentsuser) {
+        if (id == user.id) {
+          return user;
+          break;
+        }
+      }
+    },
     route() {
       return "/profiles/" + this.id;
     },
@@ -35,7 +141,7 @@ export default {
       this.comment[index] = "";
       // console.log(post, index);
     },
-    likepost(postid, index) {
+    likepost(postid) {
       this.id = $('meta[name="userid"]').attr("content");
       var data = {
         user_id: this.id,
@@ -44,8 +150,9 @@ export default {
       axios
         .post("./api/addlike", data)
         .then(response => {
-          this.posts[index].likes = response.data[0];
-          this.iconcolor[index] = response.data[1];
+          this.post.likes = response.data[0];
+          this.likes = response.data[1];
+          // this.iconcolor[index] = response.data[1];
         })
         .catch(error => {
           console.log(error.data);
@@ -58,10 +165,11 @@ export default {
       .get("./api/post/" + this.$route.params.id)
       .then(response => {
         console.log(response.data);
+        this.post = response.data[3];
         this.comments = response.data[0];
         this.user = response.data[1];
-        this.profile = response.data[2];
-        this.likes = response.data[3];
+        this.likes = response.data[2];
+        this.commentsuser = response.data[4];
       })
       .catch(error => {
         console.log(error.data);
@@ -90,5 +198,14 @@ div.bio {
 }
 div.container {
   margin-top: 2%;
+}
+.iconsize {
+  font-size: 1.5rem;
+}
+input:focus {
+  box-shadow: none;
+}
+.iconcover:hover {
+  cursor: pointer;
 }
 </style>

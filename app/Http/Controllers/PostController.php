@@ -69,9 +69,13 @@ class PostController extends Controller
     {
 
         $comments = Comment::where('post_id', $post->id)->get();
+        $commentsownerid = Comment::where('user_id', $post->user_id)->pluck('user_id');
+        // return ($commentsownerid);
+        $commentsowner = User::where('id', '=',$commentsownerid)->get();
+        // return ($commentsowner); 
         $owner = User::where('id', $post->user_id)->first();
-        $likes = Like::where('post_id', $post->id)->count();
-        return ([$comments, $owner, $likes]);
+        $likes = Like::where('post_id', $post->id)->get();
+        return ([$comments, $owner, $likes, $post, $commentsowner]);
     }
 
     /**
