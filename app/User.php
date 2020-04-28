@@ -47,6 +47,6 @@ class User extends Authenticatable
     }
     public function unreadNotifications()
     {
-        return Notification::where('to', auth()->user()->id)->where('read', false)->get();
+        return Notify::where('to', auth()->user()->id)->where('read', false)->get();
     }
 }

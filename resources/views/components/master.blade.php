@@ -8,6 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="user-id" content="{{Auth::check() ? Auth::user()->id : ''}}">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
@@ -62,12 +63,14 @@
                         <router-link to="/" class="nav-link"><i class="fas fa-home fa-lg"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-location-arrow fa-lg"></i></a>
+                        <router-link to="/direct" class="nav-link"><i class="fas fa-location-arrow fa-lg"></i>
+                        </router-link>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="far fa-compass fa-lg"></i></a>
                     </li>
-                    <notification :unread="{{auth()->user()->unreadNotifications()}}"></notification>
+                    <notification :userid="{{auth()->user()->id}}" :unread="{{auth()->user()->unreadNotifications()}}">
+                    </notification>
 
                     <li class="nav-item">
                         <router-link class="nav-link" to="/addpost"><i class="fas fa-plus-circle"></i>

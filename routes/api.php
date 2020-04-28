@@ -19,6 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('/follow', 'FollowerController@store');
 Route::get('/notfollwer/{user}', 'FollowerController@show');
+Route::get('/allfriends', 'FollowerController@friends');
+Route::post('/allmessages/{user}', 'MessageController@show');
+
 Route::get('/user/{user}', 'UserController@show');
 Route::get('/alluser/{user}', 'UserController@index');
 Route::post('/updateprofile/{user}', 'UserController@update');
