@@ -2693,7 +2693,9 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios.get("./api/allfriends").then(function (response) {
+    var auth = $('meta[name="userid"]').attr("content");
+    console.log(auth);
+    axios.get("./api/allfriends/" + $('meta[name="userid"]').attr("content")).then(function (response) {
       _this.friends = response.data;
     });
   }
@@ -2747,6 +2749,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2760,18 +2771,29 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     savemessage: function savemessage() {
-      var data = {
-        to: parseInt($('meta[name="userid"]').attr("content")),
-        from: this.frienduser.id,
-        message: this.message
-      };
-      this.messages.push(data); //   axios.post("./api/savemessage", data).then(response => {
-      //     this.messages.push(data);
-      //   });
+      var _this = this;
+
+      this.$Progress.start();
+
+      if (this.message) {
+        var data = {
+          from: $('meta[name="userid"]').attr("content"),
+          to: this.frienduser.id,
+          message: this.message
+        };
+        this.message = "";
+        axios.post("./api/savemessage", data).then(function (response) {
+          _this.messages.push(data);
+
+          _this.$Progress.finish();
+        })["catch"](function (error) {
+          _this.$Progress.fail();
+        });
+      }
     }
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     // alert($('meta[name="userid"]').attr("content"));
     this.$Progress.start();
@@ -2782,12 +2804,23 @@ __webpack_require__.r(__webpack_exports__);
       friendid: this.$route.params.id
     };
     axios.post("./api/allmessages/" + this.$route.params.id, data).then(function (response) {
-      _this.messages = response.data[0];
-      _this.frienduser = response.data[1];
+      _this2.messages = response.data[0];
+      _this2.frienduser = response.data[1];
 
-      _this.$Progress.finish();
+      _this2.$Progress.finish();
     })["catch"](function (error) {
-      _this.$Progress.fail();
+      _this2.$Progress.fail();
+    });
+  },
+  created: function created() {
+    var _this3 = this;
+
+    var to = this.$route.params.id;
+    var from = $('meta[name="userid"]').attr("content");
+    Echo["private"]("chat." + from + "." + to).listen("Chat", function (e) {
+      console.log(e);
+
+      _this3.messages.push(e.message);
     });
   }
 }); // mounted()
@@ -7889,7 +7922,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.sidecard[data-v-7be19c8e] {\n  height: 100%;\n  max-width: 100%;\n}\ninput.form-control[data-v-7be19c8e]:hover {\n  box-shadow: none;\n}\ninput.form-control[data-v-7be19c8e]:focus {\n  box-shadow: none;\n}\ninput.form-control[data-v-7be19c8e] {\n  border-radius: 20px;\n  box-shadow: none;\n}\n.user[data-v-7be19c8e],\n.friend[data-v-7be19c8e] {\n  width: 60%;\n  border-radius: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.sidecard[data-v-7be19c8e] {\n  height: 100%;\n  max-width: 100%;\n}\ninput.form-control[data-v-7be19c8e]:hover {\n  box-shadow: none;\n}\ninput.form-control[data-v-7be19c8e]:focus {\n  box-shadow: none;\n}\ninput.form-control[data-v-7be19c8e] {\n  border-radius: 20px;\n  box-shadow: none;\n}\n.user[data-v-7be19c8e],\n.friend[data-v-7be19c8e] {\n  width: 70%;\n  border-radius: 20px;\n}\n", ""]);
 
 // exports
 
@@ -67068,28 +67101,38 @@ var render = function() {
             staticClass: "bg-white overflow-scroll overflow-auto",
             staticStyle: { height: "290px" }
           },
-          _vm._l(_vm.messages, function(msg) {
-            return _c("div", { staticClass: "d-block" }, [
-              msg.to == _vm.userid
-                ? _c(
-                    "div",
-                    {
-                      staticClass:
-                        "user border p-3 mb-1 float-right bg-light d-block"
-                    },
-                    [_vm._v(_vm._s(msg.message))]
-                  )
-                : _c(
-                    "div",
-                    {
-                      staticClass:
-                        "friend border p-3 mb-1 bg-primary float-left d-block"
-                    },
-                    [_vm._v(_vm._s(msg.message))]
-                  )
-            ])
-          }),
-          0
+          [
+            _vm.messages.length == 0
+              ? _c(
+                  "div",
+                  { staticClass: "text-center mt-4 font-weight-bold" },
+                  [_c("h5", [_vm._v("No Chat yet")])]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.messages, function(msg) {
+              return _c("ul", { staticClass: "d-block list-group" }, [
+                msg.from == _vm.userid
+                  ? _c(
+                      "li",
+                      {
+                        staticClass:
+                          "user list-group-item p-3 mb-1 float-right d-block text-center"
+                      },
+                      [_vm._v(_vm._s(msg.message))]
+                    )
+                  : _c(
+                      "li",
+                      {
+                        staticClass:
+                          "friend list-group-item p-3 mb-1 bg-primary text-white float-left d-block text-center"
+                      },
+                      [_vm._v(_vm._s(msg.message))]
+                    )
+              ])
+            })
+          ],
+          2
         )
       ])
     ]),

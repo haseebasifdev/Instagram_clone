@@ -7,10 +7,19 @@
           <span>{{frienduser.username}}</span>
         </div>
         <div class="bg-white overflow-scroll overflow-auto" style="height:290px">
-          <div v-for="msg in messages" class="d-block">
-            <div class="user border p-3 mb-1 float-right bg-light d-block" v-if="msg.to==userid">{{msg.message}}</div>
-            <div class="friend border p-3 mb-1 bg-primary float-left d-block" v-else>{{msg.message}}</div>
+          <div v-if="messages.length==0" class="text-center mt-4 font-weight-bold">
+            <h5>No Chat yet</h5>
           </div>
+          <ul v-for="msg in messages" class="d-block list-group">
+            <li
+              class="user list-group-item p-3 mb-1 float-right d-block text-center"
+              v-if="msg.from==userid"
+            >{{msg.message}}</li>
+            <li
+              class="friend list-group-item p-3 mb-1 bg-primary text-white float-left d-block text-center"
+              v-else
+            >{{msg.message}}</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -43,15 +52,24 @@ export default {
   },
   methods: {
     savemessage() {
-      var data = {
-        to: parseInt($('meta[name="userid"]').attr("content")),
-        from: this.frienduser.id,
-        message: this.message
-      };
-      this.messages.push(data);
-      //   axios.post("./api/savemessage", data).then(response => {
-      //     this.messages.push(data);
-      //   });
+      this.$Progress.start();
+      if (this.message) {
+        var data = {
+          from: $('meta[name="userid"]').attr("content"),
+          to: this.frienduser.id,
+          message: this.message
+        };
+        this.message = "";
+        axios
+          .post("./api/savemessage", data)
+          .then(response => {
+            this.messages.push(data);
+            this.$Progress.finish();
+          })
+          .catch(error => {
+            this.$Progress.fail();
+          });
+      }
     }
   },
   mounted() {
@@ -59,6 +77,7 @@ export default {
     this.$Progress.start();
     this.friendid = this.$route.params.id;
     this.userid = $('meta[name="userid"]').attr("content");
+
     var data = {
       userid: $('meta[name="userid"]').attr("content"),
       friendid: this.$route.params.id
@@ -74,6 +93,14 @@ export default {
       .catch(error => {
         this.$Progress.fail();
       });
+  },
+  created() {
+    const to = this.$route.params.id;
+    const from = $('meta[name="userid"]').attr("content");
+    Echo.private("chat." + from + "." + to).listen("Chat", e => {
+      console.log(e);
+      this.messages.push(e.message);
+    });
   }
 };
 // mounted()
@@ -101,7 +128,7 @@ input.form-control {
 }
 .user,
 .friend {
-  width: 60%;
+  width: 70%;
   border-radius: 20px;
 }
 </style>

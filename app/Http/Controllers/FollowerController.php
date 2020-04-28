@@ -64,9 +64,10 @@ class FollowerController extends Controller
         $notFolloew =  User::whereNotIn('id', $friends2)->get();
         return ($notFolloew);
     }
-    public function friends()
+    public function friends(User $user)
     {
-        return  User::all();
+        // return  User::where('id', '!=', $user->id);
+        return  User::where('id', '!=', $user->id)->get();
     }
     /**
      * Show the form for editing the specified resource.

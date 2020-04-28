@@ -36,9 +36,13 @@ export default {
     };
   },
   mounted() {
-    axios.get("./api/allfriends").then(response => {
-      this.friends = response.data;
-    });
+    const auth = $('meta[name="userid"]').attr("content");
+    console.log(auth)
+    axios
+      .get("./api/allfriends/" + $('meta[name="userid"]').attr("content"))
+      .then(response => {
+        this.friends = response.data;
+      });
   }
 };
 // mounted()

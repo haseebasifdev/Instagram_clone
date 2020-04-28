@@ -37,7 +37,12 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Message::create([
+            'to' => $request->to,
+            'from' => $request->from,
+            'message' => $request->message,
+        ]);
+        return (['Success' => 'Message save successfuy']);
     }
 
     /**
