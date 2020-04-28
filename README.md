@@ -10,7 +10,7 @@
 - **Can Comments**
 - **Visit Other User profile**
 - **Follow Friends**
-##Installation
+## Installation
 1. git clone https://github.com/haseebasifdev/Instagram_clone.git
 2. composer install
 3. npm install
